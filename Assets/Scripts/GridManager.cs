@@ -11,7 +11,6 @@ public class GridManager : MonoBehaviour
     public AStar aStar;
     BoundsInt bounds;
 
-    List<Spot> path = new List<Spot>();
     void Awake()
     {
         walkable.CompressBounds();
@@ -50,7 +49,14 @@ public class GridManager : MonoBehaviour
             {
                 if (IsInsideCell(pos, spots[i, j]))
                 {
-                    return spots[i, j];
+                    if (spots[i, j].z == 0)
+                    {
+                        return spots[i, j];
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
         }
@@ -68,11 +74,16 @@ public class GridManager : MonoBehaviour
             pos.y >= cellMinY &&
             pos.y <= cellMaxY;
     }
+    public int GetNrOfCellsBetweenPositions(Vector3 pos1, Vector3 pos2)
+    {
+        return aStar.CreatePath(spots, pos1, pos2, 1000).Count - 1;
+    }
     public bool IsInNeighbourCell(Vector3 pos1, Vector3 pos2)
     {
         float distance = Vector2.Distance(pos1, pos2);
-
-        return distance <= 1.4f;
+        float pow = Mathf.Pow(grid.cellSize.x, 2) + Mathf.Pow(grid.cellSize.x, 2);
+        float diagonalDistance = Mathf.Sqrt(pow);
+        return distance <= diagonalDistance;
     }
     public List<Vector3> GetPath(Vector3 start, Vector3 end)
     {

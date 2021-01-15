@@ -38,26 +38,36 @@ public class PlayerMovement : MonoBehaviour
     }
     public IEnumerator RequestAction()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = 0;
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
-            Vector3? clickedCellPos = GameManager.Instance.gridManager.GetCellPosAtPosition(worldPos).GetValueOrDefault();
-
+            Vector3? clickedCellPos = GameManager.Instance.gridManager.GetCellPosAtPosition(worldPos);
             if (clickedCellPos.HasValue)
             {
-               return MoveTo(clickedCellPos.Value);
+                if (GameManager.Instance.gridManager.IsInNeighbourCell(transform.position, clickedCellPos.Value))
+                {
+                    return MoveTo(clickedCellPos.Value);
+
+                }
             }
-            
+
         }
-       return null;
+        return null;
     }
     IEnumerator MoveTo(Vector3 pos)
     {
+        Vector3 startPos = transform.position;
+        Vector3 endPos = pos;
+        float lerpValue = 0;
 
-        transform.position = pos;
-        yield return new WaitForEndOfFrame();
+        while (lerpValue < 1)
+        {
+            lerpValue += Time.deltaTime * movementSpeed;
+            transform.position = Vector3.Lerp(startPos, endPos, lerpValue);
+            yield return new WaitForEndOfFrame();
+        }
     }
     bool WallCheck(Vector2 direction)
     {

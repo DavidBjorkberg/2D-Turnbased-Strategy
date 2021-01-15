@@ -20,14 +20,10 @@ public class PlayerActionPicker : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        yield return StartCoroutine(GameManager.Instance.roundManager.BeforePlayerActionEvent());
+        yield return StartCoroutine(action);
 
-        StartCoroutine(action);
-
-        yield return null;
-    }
-    IEnumerator Test()
-    {
-        print("test");
+        GameManager.Instance.roundManager.EndPlayerTurn();
         yield return null;
     }
 }
