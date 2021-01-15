@@ -42,7 +42,32 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+    public Vector3? GetCellPosAtPosition(Vector3 pos)
+    {
+        for (int i = 0; i < bounds.size.x; i++)
+        {
+            for (int j = 0; j < bounds.size.y; j++)
+            {
+                if (IsInsideCell(pos, spots[i, j]))
+                {
+                    return spots[i, j];
+                }
+            }
+        }
+        return null;
+    }
+    private bool IsInsideCell(Vector3 pos, Vector3 cell)
+    {
+        float cellMinX = cell.x - grid.cellSize.x / 2;
+        float cellMaxX = cell.x + grid.cellSize.x / 2;
+        float cellMinY = cell.y - grid.cellSize.y / 2;
+        float cellMaxY = cell.y + grid.cellSize.y / 2;
 
+        return pos.x >= cellMinX &&
+            pos.x <= cellMaxX &&
+            pos.y >= cellMinY &&
+            pos.y <= cellMaxY;
+    }
     public bool IsInNeighbourCell(Vector3 pos1, Vector3 pos2)
     {
         float distance = Vector2.Distance(pos1, pos2);

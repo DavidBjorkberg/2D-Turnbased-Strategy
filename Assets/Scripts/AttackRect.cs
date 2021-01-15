@@ -5,6 +5,7 @@ using UnityEngine;
 public class AttackRect : MonoBehaviour
 {
     public float lifeTime;
+    private List<GameObject> hitEnemies = new List<GameObject>();
     void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -12,9 +13,10 @@ public class AttackRect : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent(out EnemyHealth enemy))
+        if(!hitEnemies.Contains(collision.gameObject) && collision.TryGetComponent(out EnemyHealth enemy))
         {
             enemy.TakeDamage(5);
+            hitEnemies.Add(collision.gameObject);
         }
     }
 }

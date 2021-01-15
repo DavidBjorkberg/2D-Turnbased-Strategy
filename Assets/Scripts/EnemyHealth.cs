@@ -6,6 +6,12 @@ public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth;
     private int curHealth;
+    private TakeDamageFlash damageFlash;
+    private void Awake()
+    {
+        curHealth = maxHealth;
+        damageFlash = GetComponent<TakeDamageFlash>();
+    }
     public void TakeDamage(int amount)
     {
         curHealth -= amount;
@@ -13,5 +19,10 @@ public class EnemyHealth : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        else
+        {
+            damageFlash.Flash();
+        }
+
     }
 }

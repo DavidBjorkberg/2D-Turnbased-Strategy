@@ -17,7 +17,14 @@ public class PlayerAttack : MonoBehaviour
             {
                 AttackCell cell = ScriptableObject.CreateInstance("AttackCell") as AttackCell;
                 cell.isActive = true;
-                cell.attackRect = attackRect;
+                if (i == 2 && j == 2 || i == 1 && j == 1 || i == 1 && j == 2)
+                {
+                    cell.attackRect = attackRect;
+                }
+                else
+                {
+                    cell.attackRect = null;
+                }
                 attackGrid[i].Add(cell);
             }
         }

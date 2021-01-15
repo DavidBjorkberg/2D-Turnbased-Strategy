@@ -7,11 +7,20 @@ public class TakeDamageFlash : MonoBehaviour
     public float flashSpeed;
     public SpriteRenderer spriteRenderer;
     private Coroutine damageFlashCoroutine;
+    private Color baseColor;
+    private void Awake()
+    {
+        baseColor = spriteRenderer.color;
+    }
     public void Flash()
     {
+        if (damageFlashCoroutine != null)
+        {
+            StopCoroutine(damageFlashCoroutine);
+            spriteRenderer.color = baseColor;
+        }
         damageFlashCoroutine = StartCoroutine(DamageFlash());
     }
-
     IEnumerator DamageFlash()
     {
         float lerpValue = 0;

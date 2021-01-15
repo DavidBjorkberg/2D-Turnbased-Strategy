@@ -8,10 +8,14 @@ public class AStar : MonoBehaviour
 {
     public Spot[,] Spots;
     private Vector3 cellSize;
+    private int columns;
+    private int rows;
     public void Init(int columns, int rows, Vector3 cellSize)
     {
         Spots = new Spot[columns, rows];
         this.cellSize = cellSize;
+        this.columns = columns;
+        this.rows = rows;
     }
     private bool IsValidPath(Vector3[,] grid, Spot start, Spot end)
     {
@@ -38,7 +42,7 @@ public class AStar : MonoBehaviour
         {
             for (int j = 0; j < rows; j++)
             {
-                Spots[i, j] = new Spot(grid[i, j].x, grid[i, j].y, grid[i, j].z);
+                Spots[i, j] = new Spot(grid[i, j].x, grid[i, j].y, grid[i, j].z, columns, rows);
             }
         }
 
@@ -69,11 +73,19 @@ public class AStar : MonoBehaviour
             //Find shortest step distance in the direction of your goal within the open set
             int winner = 0;
             for (int i = 0; i < OpenSet.Count; i++)
+            {
                 if (OpenSet[i].F < OpenSet[winner].F)
+                {
                     winner = i;
+                }
                 else if (OpenSet[i].F == OpenSet[winner].F)//tie breaking for faster routing
+                {
                     if (OpenSet[i].H < OpenSet[winner].H)
+                    {
                         winner = i;
+                    }
+                }
+            }
 
             var current = OpenSet[winner];
 

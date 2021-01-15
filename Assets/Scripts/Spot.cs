@@ -12,10 +12,14 @@ public class Spot
     public float height = 0;
     public List<Spot> neighbours;
     public Spot previous = null;
-    public Spot(float x, float y, float height)
+    private int gridColumns;
+    private int gridRows;
+    public Spot(float x, float y, float height, int gridColumns, int gridRows)
     {
         this.x = x;
         this.y = y;
+        this.gridColumns = gridColumns;
+        this.gridRows = gridRows;
         F = 0;
         G = 0;
         H = 0;
@@ -36,15 +40,15 @@ public class Spot
             neighbours.Add(grid[x, y + 1]);
         if (y > 0)
             neighbours.Add(grid[x, y - 1]);
-        #region diagonal
-        //if (X > 0 && Y > 0)
-        //    Neighboors.Add(grid[X - 1, Y - 1]);
-        //if (X < Utils.Columns - 1 && Y > 0)
-        //    Neighboors.Add(grid[X + 1, Y - 1]);
-        //if (X > 0 && Y < Utils.Rows - 1)
-        //    Neighboors.Add(grid[X - 1, Y + 1]);
-        //if (X < Utils.Columns - 1 && Y < Utils.Rows - 1)
-        //    Neighboors.Add(grid[X + 1, Y + 1]);
+        #region diagonal 
+        if (x > 0 && y > 0)
+            neighbours.Add(grid[x - 1, y - 1]);
+        if (x < gridColumns - 1 && y > 0)
+            neighbours.Add(grid[x + 1, y - 1]);
+        if (x > 0 && y < gridRows - 1)
+            neighbours.Add(grid[x - 1, y + 1]);
+        if (x < gridColumns - 1 && y < gridRows - 1)
+            neighbours.Add(grid[x + 1, y + 1]);
         #endregion
     }
 }
