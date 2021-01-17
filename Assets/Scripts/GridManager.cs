@@ -46,14 +46,8 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-    public Vector2 GetPosAsUV(Vector3 pos)
-    {
-        Vector2 uv;
-        uv.x = (pos.x - bounds.xMin) / (bounds.xMax - bounds.xMin);
-        uv.y = (pos.y - bounds.yMin) / (bounds.yMax - bounds.yMin);
-        return uv;
-    }
-    public Vector3? GetCellPosAtPosition(Vector3 pos)
+
+    public Vector2? GetCellPosAtPosition(Vector2 pos)
     {
         for (int i = 0; i < bounds.size.x; i++)
         {
@@ -74,7 +68,7 @@ public class GridManager : MonoBehaviour
         }
         return null;
     }
-    private bool IsInsideCell(Vector3 pos, Vector3 cell)
+    private bool IsInsideCell(Vector3 pos, Vector2 cell)
     {
         float cellMinX = cell.x - grid.cellSize.x / 2;
         float cellMaxX = cell.x + grid.cellSize.x / 2;

@@ -15,7 +15,8 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        Shader.SetGlobalVector("playerPosition", new Vector4(transform.position.x,transform.position.y,transform.position.z, 1));
+        Shader.SetGlobalVector("playerPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 1));
+        Shader.SetGlobalVector("mousePos", new Vector4(GameManager.Instance.GetMousePosInWorld().x, GameManager.Instance.GetMousePosInWorld().y, 0, 1));
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
         Vector3 dir = new Vector3(horizontalInput, verticalInput);
@@ -41,10 +42,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 0;
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
-            Vector3? clickedCellPos = GameManager.Instance.gridManager.GetCellPosAtPosition(worldPos);
+            Vector2 mousePos = GameManager.Instance.GetMousePosInWorld();
+            Vector2? clickedCellPos = GameManager.Instance.gridManager.GetCellPosAtPosition(mousePos);
             if (clickedCellPos.HasValue)
             {
                 if (GameManager.Instance.gridManager.IsInNeighbourCell(transform.position, clickedCellPos.Value))

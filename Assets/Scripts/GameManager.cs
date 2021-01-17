@@ -21,4 +21,12 @@ public class GameManager : MonoBehaviour
             _instance = this;
         }
     }
+
+    public Vector2 GetMousePosInWorld()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 0;
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
+        return worldPos;
+    }
 }

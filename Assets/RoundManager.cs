@@ -11,10 +11,12 @@ public class RoundManager : MonoBehaviour
     }
     public void StartPlayerTurn()
     {
+        Shader.SetGlobalFloat("playerTakingWalkInput", 1);
          StartCoroutine(GameManager.Instance.player.GetComponent<PlayerActionPicker>().RequestAction());
     }
     public IEnumerator BeforePlayerActionEvent()
     {
+        Shader.SetGlobalFloat("playerTakingWalkInput", 0);
         yield return null;
     }
     public IEnumerator BeforeEnemyActionEvent()

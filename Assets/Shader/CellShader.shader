@@ -6,6 +6,7 @@ Shader "CellShader"
 		_LineColor("Line Color", Color) = (1,1,1,1)
 		_CellColor("Cell Color", Color) = (0,0,0,0)
 		_WalkAbleColor("Walkable Color", Color) = (0,0,0,0)
+		_HighlightedColor("Highlighted Color", Color) = (0,0,0,0)
 		_LineSize("Line Size", Range(0,1)) = 0.15
 
 	}
@@ -32,7 +33,8 @@ Shader "CellShader"
 					float2 uv_MainTex : TEXCOORD0;
 					float4 worldPos : POS;
 					float4 debugColor : Debug;
-					float isWalkable : BOOL;
+					float isWalkable : WALKABLE;
+					float isHovered : HOVERED;
 				};
 				struct v2g
 				{
@@ -46,9 +48,12 @@ Shader "CellShader"
 				float4 _LineColor;
 				float4 _CellColor;
 				float4 _WalkAbleColor;
+				float4 _HighlightedColor;
 				float4 _MainTex_ST;
 
 				uniform float4 playerPosition;
+				uniform float4 mousePos;
+				uniform float playerTakingWalkInput;
 				v2g vert(appdata_base v)
 				{
 					v2g o;
@@ -67,7 +72,7 @@ Shader "CellShader"
 					{
 						fourthPoint.x = input[0].worldPos.x;
 					}
-					else if(input[1].worldPos.x != input[0].worldPos.x 
+					else if (input[1].worldPos.x != input[0].worldPos.x
 						&& input[1].worldPos.x != input[2].worldPos.x)
 					{
 						fourthPoint.x = input[1].worldPos.x;
@@ -165,12 +170,23 @@ Shader "CellShader"
 
 					return true;
 				}
+				bool IsPointInsideRectangle(float2 bottomLeft, float2 topRight,float2 pointToCheck)
+				{
+					if (pointToCheck.x > bottomLeft.x
+						&& pointToCheck.x < topRight.x
+						&& pointToCheck.y > bottomLeft.y
+						&& pointToCheck.y < topRight.y)
+					{
+						return true;
+					}
+
+					return false;
+				}
 				[maxvertexcount(3)]
 				void geom(triangle v2g input[3], inout TriangleStream<g2f> tristream)
 				{
 					g2f o;
 					float2 fourthPoint = GetFourthPoint(input);
-
 					float2 bottomLeft = GetBottomLeftVert(input, fourthPoint);
 					float2 topLeft = GetTopLeftVert(input, fourthPoint);
 					float2 topRight = GetTopRightVert(input, fourthPoint);
@@ -178,17 +194,26 @@ Shader "CellShader"
 					float2 centerOfQuad = (bottomLeft + topLeft + topRight + bottomRight) / 4;
 
 					bool isWalkable = false;
-					float2 topLeftOfPlayerWalkable = playerPosition.xy + float2(-1.5, 1.5);
-					float2 bottomRightOfPlayerWalkable = playerPosition.xy + float2(1.5, -1.5);
-					isWalkable = RectangleIntersection(topLeftOfPlayerWalkable, bottomRightOfPlayerWalkable, topLeft, bottomRight);
+					bool isHovered = false;
+					float4 debug = float4(1, 0, 0, 1);
+					if (playerTakingWalkInput == 1)
+					{
+						float2 topLeftOfPlayerWalkable = playerPosition.xy + float2(-1.5, 1.5);
+						float2 bottomRightOfPlayerWalkable = playerPosition.xy + float2(1.5, -1.5);
+						isWalkable = RectangleIntersection(topLeftOfPlayerWalkable, bottomRightOfPlayerWalkable, topLeft, bottomRight);
+						if (IsPointInsideRectangle(bottomLeft, topRight, mousePos.xy))
+						{
+							isHovered = true;
+						}
+					}
 
-					
 					for (int i = 0; i < 3; i++)
 					{
 						o.pos = input[i].pos;
 						o.uv_MainTex = input[i].uv_MainTex;
 						o.worldPos = input[i].worldPos;
 						o.isWalkable = isWalkable;
+						o.isHovered = isHovered;
 						o.debugColor = float4(0,0,0,0);
 						tristream.Append(o);
 					}
@@ -208,9 +233,15 @@ Shader "CellShader"
 					}
 					else if (IN.isWalkable)
 					{
-						color = _WalkAbleColor;
+						if (IN.isHovered)
+						{
+							color = _HighlightedColor;
+						}
+						else
+						{
+							color = _WalkAbleColor;
+						}
 					}
-					//color = IN.debugColor;
 					if (color.w == 0.0) {
 						clip(-1.0);
 					}

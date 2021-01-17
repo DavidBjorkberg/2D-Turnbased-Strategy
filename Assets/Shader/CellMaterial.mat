@@ -26,7 +26,8 @@ Material:
     m_Floats:
     - _LineSize: 0.033
     m_Colors:
-    - _CellColor: {r: 0, g: 0, b: 0, a: 0.57254905}
-    - _LineColor: {r: 1, g: 0, b: 0, a: 1}
-    - _WalkAbleColor: {r: 0.13656996, g: 0.82003, b: 0.8773585, a: 1}
+    - _CellColor: {r: 0, g: 0, b: 0, a: 0.14509805}
+    - _HighlightedColor: {r: 0.42114633, g: 0.9811321, b: 0.50328845, a: 0.7647059}
+    - _LineColor: {r: 0.9339623, g: 0.76214844, b: 0.76214844, a: 1}
+    - _WalkAbleColor: {r: 0.13725491, g: 0.8784314, b: 0.25228566, a: 0.4117647}
   m_BuildTextureStacks: []
