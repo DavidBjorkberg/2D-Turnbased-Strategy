@@ -6,9 +6,11 @@ public class GridManager : MonoBehaviour
 {
     public Tilemap walkable;
     public Tilemap collidable;
+    public GameObject cellPrefab;
     public Grid grid;
     public Vector3[,] spots;
     public AStar aStar;
+    private List<GameObject> cells = new List<GameObject>();
     BoundsInt bounds;
 
     void Awake()
@@ -20,10 +22,10 @@ public class GridManager : MonoBehaviour
             Debug.LogError("Walkable cellbounds are not identical to collidable cellbounds");
         }
         bounds = walkable.cellBounds;
-        CreateGrid();
+        CreateGridAndCells();
         aStar.Init(bounds.size.x, bounds.size.y, grid.cellSize);
     }
-    public void CreateGrid()
+    public void CreateGridAndCells()
     {
         spots = new Vector3[bounds.size.x, bounds.size.y];
         for (int x = bounds.xMin, i = 0; i < (bounds.size.x); x++, i++)
@@ -33,13 +35,23 @@ public class GridManager : MonoBehaviour
                 if (collidable.HasTile(new Vector3Int(x, y, 0)))
                 {
                     spots[i, j] = new Vector3(x + 0.5f, y + 0.5f, 1);
+                    cells.Add(Instantiate(cellPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity));
+                    cells[cells.Count - 1].GetComponent<SpriteRenderer>().material = null;
                 }
                 else if (walkable.HasTile(new Vector3Int(x, y, 0)))
                 {
                     spots[i, j] = new Vector3(x + 0.5f, y + 0.5f, 0);
+                    cells.Add(Instantiate(cellPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity));
                 }
             }
         }
+    }
+    public Vector2 GetPosAsUV(Vector3 pos)
+    {
+        Vector2 uv;
+        uv.x = (pos.x - bounds.xMin) / (bounds.xMax - bounds.xMin);
+        uv.y = (pos.y - bounds.yMin) / (bounds.yMax - bounds.yMin);
+        return uv;
     }
     public Vector3? GetCellPosAtPosition(Vector3 pos)
     {

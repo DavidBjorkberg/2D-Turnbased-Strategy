@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
+        Shader.SetGlobalVector("playerPosition", new Vector4(transform.position.x,transform.position.y,transform.position.z, 1));
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
         Vector3 dir = new Vector3(horizontalInput, verticalInput);
