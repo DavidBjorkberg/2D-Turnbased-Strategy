@@ -10,6 +10,7 @@ public class GridManager : MonoBehaviour
     public Grid grid;
     public Vector3[,] spots;
     public AStar aStar;
+    [SerializeField] private GameObject walkGrid;
     private List<GameObject> cells = new List<GameObject>();
     BoundsInt bounds;
 
@@ -21,6 +22,7 @@ public class GridManager : MonoBehaviour
         {
             Debug.LogError("Walkable cellbounds are not identical to collidable cellbounds");
         }
+        Shader.SetGlobalFloat("cellSize", grid.cellSize.x);
         bounds = walkable.cellBounds;
         CreateGridAndCells();
         aStar.Init(bounds.size.x, bounds.size.y, grid.cellSize);
@@ -35,13 +37,13 @@ public class GridManager : MonoBehaviour
                 if (collidable.HasTile(new Vector3Int(x, y, 0)))
                 {
                     spots[i, j] = new Vector3(x + 0.5f, y + 0.5f, 1);
-                    cells.Add(Instantiate(cellPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity));
+                    cells.Add(Instantiate(cellPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity,walkGrid.transform));
                     cells[cells.Count - 1].GetComponent<SpriteRenderer>().material = null;
                 }
                 else if (walkable.HasTile(new Vector3Int(x, y, 0)))
                 {
                     spots[i, j] = new Vector3(x + 0.5f, y + 0.5f, 0);
-                    cells.Add(Instantiate(cellPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity));
+                    cells.Add(Instantiate(cellPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity, walkGrid.transform));
                 }
             }
         }

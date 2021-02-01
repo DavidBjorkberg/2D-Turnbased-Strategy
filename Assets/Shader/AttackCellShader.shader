@@ -1,12 +1,10 @@
-Shader "CellShader"
+Shader "AttackCellShader"
 {
 	Properties
 	{
 		_MainTex("Texture", 2D) = "white" {}
 		_LineColor("Line Color", Color) = (1,1,1,1)
 		_CellColor("Cell Color", Color) = (0,0,0,0)
-		_WalkAbleColor("Walkable Color", Color) = (0,0,0,0)
-		_HighlightedColor("Highlighted Color", Color) = (0,0,0,0)
 		_LineSize("Line Size", Range(0,1)) = 0.15
 
 	}
@@ -33,8 +31,7 @@ Shader "CellShader"
 					float2 uv_MainTex : TEXCOORD0;
 					float4 worldPos : POS;
 					float4 debugColor : Debug;
-					float isWalkable : WALKABLE;
-					float isHovered : HOVERED;
+					float index : INDEX;
 				};
 				struct v2g
 				{
@@ -47,8 +44,6 @@ Shader "CellShader"
 				float _LineSize;
 				float4 _LineColor;
 				float4 _CellColor;
-				float4 _WalkAbleColor;
-				float4 _HighlightedColor;
 				float4 _MainTex_ST;
 
 				uniform float4 playerPosition;
@@ -194,28 +189,19 @@ Shader "CellShader"
 					float2 bottomRight = GetBottomRightVert(input, fourthPoint);
 					float2 centerOfQuad = (bottomLeft + topLeft + topRight + bottomRight) / 4;
 
-					bool isWalkable = false;
-					bool isHovered = false;
-					float4 debug = float4(1, 0, 0, 1);
-					if (playerTakingWalkInput == 1)
-					{
-						float2 topLeftOfPlayerWalkable = playerPosition.xy + float2(-((cellSize / 2) + cellSize), (cellSize / 2) + cellSize);
-						float2 bottomRightOfPlayerWalkable = playerPosition.xy + float2((cellSize / 2) + cellSize, -((cellSize / 2) + cellSize));
-						isWalkable = RectangleIntersection(topLeftOfPlayerWalkable, bottomRightOfPlayerWalkable, topLeft, bottomRight);
-						if (IsPointInsideRectangle(bottomLeft, topRight, mousePos.xy))
-						{
-							isHovered = true;
-						}
-					}
+					float2 localPos;
+					localPos.x = centerOfQuad.x - playerPosition.x;
+					localPos.y = playerPosition.y - centerOfQuad.y;
+					localPos += float2(3, 3);
+					float index = floor(localPos.x) + (floor(localPos.y) * 7);
 
 					for (int i = 0; i < 3; i++)
 					{
 						o.pos = input[i].pos;
 						o.uv_MainTex = input[i].uv_MainTex;
 						o.worldPos = input[i].worldPos;
-						o.isWalkable = isWalkable;
-						o.isHovered = isHovered;
 						o.debugColor = float4(0,0,0,0);
+						o.index = index;
 						tristream.Append(o);
 					}
 				}
@@ -224,24 +210,20 @@ Shader "CellShader"
 				{
 					float2 uv = IN.uv_MainTex;
 
-					float4 color = _CellColor;
-					float xDistanceToPlayer = abs(IN.worldPos.x - playerPosition.x);
-					float yDistanceToPlayer = abs(IN.worldPos.y - playerPosition.y);
+					float4 color;
+					float4 localPos = playerPosition - IN.worldPos;
+					if (IN.index == 8 || IN.index == 10 || IN.index == 18)
+					{
+						color = _CellColor;
+					}
+					else
+					{
+						color = tex2D(_MainTex,uv);
+					}
 
 					if (uv.x > 1 - _LineSize || uv.x < _LineSize || uv.y > 1 - _LineSize || uv.y < _LineSize)
 					{
 						color = _LineColor;
-					}
-					else if (IN.isWalkable)
-					{
-						if (IN.isHovered)
-						{
-							color = _HighlightedColor;
-						}
-						else
-						{
-							color = _WalkAbleColor;
-						}
 					}
 					if (color.w == 0.0) {
 						clip(-1.0);

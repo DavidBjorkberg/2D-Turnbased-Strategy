@@ -3935,12 +3935,12 @@ GameObject:
   - component: {fileID: 231179634}
   - component: {fileID: 231179635}
   m_Layer: 0
-  m_Name: CombatGrid
+  m_Name: TestGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &231179634
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3981,7 +3981,7 @@ SpriteRenderer:
   m_SortingLayerID: -1480873495
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ce344f0fb448d244b8d3967ddfd2f797, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ecb63d02f4e504b4d89ed2c51010bd07, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4034,6 +4034,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c456a66facd2078489aaa06c0e068a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &262303494 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8438805141021499565, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
+  m_PrefabInstance: {fileID: 8438805141977434024}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &262303500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4060,6 +4065,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fbcaaa32e0bb95468bfdf241db3e97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &305087013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 305087014}
+  m_Layer: 0
+  m_Name: WalkGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &305087014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305087013}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &545895234
 GameObject:
   m_ObjectHideFlags: 0
@@ -10905,6 +10940,7 @@ MonoBehaviour:
   cellPrefab: {fileID: 9085346680185988688, guid: d5affd2d86e8c45488cfa7bad854cedf, type: 3}
   grid: {fileID: 2096774856}
   aStar: {fileID: 1635236644}
+  walkGrid: {fileID: 305087013}
 --- !u!4 &1635236643
 Transform:
   m_ObjectHideFlags: 0
@@ -10959,6 +10995,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTest: {fileID: 646737882}
+--- !u!1 &1685577049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1685577050}
+  - component: {fileID: 1685577051}
+  m_Layer: 0
+  m_Name: AttackGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1685577050
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685577049}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 262303494}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1685577051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685577049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1751eac32fa56fe449c055fff4f2a615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWidth: 6
+  gridHeight: 6
+  cellPrefab: {fileID: 9085346680185988688, guid: 0af10715b076e9148a827b85d5e70959, type: 3}
 --- !u!1 &2096774855
 GameObject:
   m_ObjectHideFlags: 0
@@ -11061,7 +11143,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8438805141021499565, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.44
+      value: 17.27
       objectReference: {fileID: 0}
     - target: {fileID: 8438805141021499565, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
       propertyPath: m_LocalPosition.y
