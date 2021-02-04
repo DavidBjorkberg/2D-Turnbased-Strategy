@@ -10727,7 +10727,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7042816731747549221, guid: c1b2702f5cdfe9347a313d14a7242083, type: 3}
       propertyPath: m_SortingOrder
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7042816731747549221, guid: c1b2702f5cdfe9347a313d14a7242083, type: 3}
       propertyPath: m_SortingLayerID
@@ -10916,6 +10916,7 @@ GameObject:
   - component: {fileID: 1635236644}
   - component: {fileID: 1635236645}
   - component: {fileID: 1635236646}
+  - component: {fileID: 1635236647}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -10982,6 +10983,8 @@ MonoBehaviour:
   player: {fileID: 262303493}
   gridManager: {fileID: 1635236642}
   roundManager: {fileID: 1635236646}
+  glyphManager: {fileID: 1635236647}
+  testGlyph: {fileID: 11400000, guid: f8d1affdfb4648243be336997c9184dc, type: 2}
 --- !u!114 &1635236646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10995,6 +10998,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTest: {fileID: 646737882}
+--- !u!114 &1635236647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635236641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aeb8f1c75eef0c4c93bc4bcb06098fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1685577049
 GameObject:
   m_ObjectHideFlags: 0
@@ -11035,11 +11050,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1685577049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1751eac32fa56fe449c055fff4f2a615, type: 3}
+  m_Script: {fileID: 11500000, guid: 8df77ac34481a5e4a96bb2917e9fe772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 6
-  gridHeight: 6
+  gridWidth: 7
+  gridHeight: 7
   cellPrefab: {fileID: 9085346680185988688, guid: 0af10715b076e9148a827b85d5e70959, type: 3}
 --- !u!1 &2096774855
 GameObject:
@@ -11105,6 +11120,14 @@ PrefabInstance:
       propertyPath: iFrameLength
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 378642532891558702, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
+      propertyPath: attackGrid
+      value: 
+      objectReference: {fileID: 1685577051}
+    - target: {fileID: 378642532891558702, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
+      propertyPath: attackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 644b91d579c619b4bb6f5f442d36b55d, type: 3}
     - target: {fileID: 8343909402574284264, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
       propertyPath: m_Color.b
       value: 0.9811321
@@ -11143,11 +11166,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8438805141021499565, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 17.27
+      value: 17.5
       objectReference: {fileID: 0}
     - target: {fileID: 8438805141021499565, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.88
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8438805141021499565, guid: 3d27528d0afc6664f9d460aa82b57183, type: 3}
       propertyPath: m_LocalPosition.z

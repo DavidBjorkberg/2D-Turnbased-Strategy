@@ -15,9 +15,9 @@ public class SpawnAttackGrid : MonoBehaviour
     void Spawn()
     {
         Vector3 playerPos = GameManager.Instance.player.transform.position;
-        for (int i = -gridWidth / 2; i <= gridWidth / 2; i++)
+        for (int i = -gridWidth / 2; i < gridWidth / 2; i++)
         {
-            for (int j = -gridHeight /  2; j <= gridHeight / 2; j++)
+            for (int j = -gridHeight /  2; j < gridHeight / 2; j++)
             {
                 Vector3 spawnPos = playerPos + new Vector3(i, j);
                 Instantiate(cellPrefab, spawnPos, Quaternion.identity, transform);

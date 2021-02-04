@@ -16,8 +16,13 @@ public class PlayerActionPicker : MonoBehaviour
         IEnumerator action = null;
         while (action == null)
         {
+            attack.PerformNonTurnEndingAction();
             action = movement.RequestAction();
-            yield return new WaitForEndOfFrame();
+            if (action == null)
+            {
+                action = attack.RequestAction();
+            }
+            yield return null;
         }
 
         yield return StartCoroutine(GameManager.Instance.roundManager.BeforePlayerActionEvent());

@@ -31,7 +31,7 @@ Shader "AttackCellShader"
 					float2 uv_MainTex : TEXCOORD0;
 					float4 worldPos : POS;
 					float4 debugColor : Debug;
-					float index : INDEX;
+					float2 index : INDEX;
 				};
 				struct v2g
 				{
@@ -50,6 +50,7 @@ Shader "AttackCellShader"
 				uniform float4 mousePos;
 				uniform float playerTakingWalkInput;
 				uniform float cellSize;
+				uniform float4 cellsToRender[7];
 				v2g vert(appdata_base v)
 				{
 					v2g o;
@@ -189,11 +190,11 @@ Shader "AttackCellShader"
 					float2 bottomRight = GetBottomRightVert(input, fourthPoint);
 					float2 centerOfQuad = (bottomLeft + topLeft + topRight + bottomRight) / 4;
 
-					float2 localPos;
-					localPos.x = centerOfQuad.x - playerPosition.x;
-					localPos.y = playerPosition.y - centerOfQuad.y;
-					localPos += float2(3, 3);
-					float index = floor(localPos.x) + (floor(localPos.y) * 7);
+					float2 index;
+					index.x = centerOfQuad.x - playerPosition.x;
+					index.y = playerPosition.y - centerOfQuad.y;
+					index += float2(3, 3);
+					//float index = floor(localPos.x) + (floor(localPos.y) * 7);
 
 					for (int i = 0; i < 3; i++)
 					{
@@ -209,23 +210,23 @@ Shader "AttackCellShader"
 				float4 frag(g2f IN) : COLOR
 				{
 					float2 uv = IN.uv_MainTex;
+					float4 color = tex2D(_MainTex, uv);
 
-					float4 color;
-					float4 localPos = playerPosition - IN.worldPos;
-					if (IN.index == 8 || IN.index == 10 || IN.index == 18)
+					bool shouldRender = false;
+
+					for (int i = 0; i < 5; i++)
 					{
-						color = _CellColor;
-					}
-					else
-					{
-						color = tex2D(_MainTex,uv);
+						if (IN.index.x == cellsToRender[i].x && IN.index.y == cellsToRender[i].y)
+						{
+							shouldRender = true;
+						}
 					}
 
 					if (uv.x > 1 - _LineSize || uv.x < _LineSize || uv.y > 1 - _LineSize || uv.y < _LineSize)
 					{
 						color = _LineColor;
 					}
-					if (color.w == 0.0) {
+					if (color.w == 0.0 || !shouldRender) {
 						clip(-1.0);
 					}
 					return color;
