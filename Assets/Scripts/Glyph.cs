@@ -5,19 +5,24 @@ using UnityEngine;
 
 public class Glyph : ScriptableObject
 {
-    public Sprite sprite; 
-
+    public Sprite sprite;
+    public Vector2Int cellIndex;
 
     public void Process()
     {
-
+        CheckCondition();
     }
     void CheckCondition()
     {
 
+        if (GameManager.Instance.gridManager.IsInRange(cellIndex, GameManager.Instance.roundManager.enemyTest.transform.position, 0))
+        {
+            Trigger();
+        }
     }
     void Trigger()
     {
-
+        Debug.Log("TRIGGERED");
+        GameManager.Instance.glyphManager.RemoveGlyph(cellIndex);
     }
 }

@@ -162,6 +162,23 @@ public class GridManager : MonoBehaviour
             return false;
         }
     }
+    public bool IsInRange(Vector2 pos1Index, Vector3 pos2, int rangeInCells)
+    {
+        Vector2Int? pos2Index = GetCellAtPosition(pos2);
+
+        if (pos2Index.HasValue)
+        {
+            bool isXInRange = Mathf.Abs(pos1Index.x - pos2Index.Value.x) <= rangeInCells;
+            bool isYInRange = Mathf.Abs(pos1Index.y - pos2Index.Value.y) <= rangeInCells;
+
+            return isXInRange && isYInRange;
+        }
+        else
+        {
+            print("Tried to get cell outside of grid");
+            return false;
+        }
+    }
     public GameObject GetCell(Vector2Int index)
     {
         return cells[index.x][index.y];

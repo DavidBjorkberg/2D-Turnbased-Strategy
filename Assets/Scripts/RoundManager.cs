@@ -41,6 +41,7 @@ public class RoundManager : MonoBehaviour
     }
     public void EndEnemyTurn()
     {
+        GameManager.Instance.glyphManager.ProcessGlyphs();
         StartPlayerTurn();
     }
 }
