@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
             Vector2? clickedCellPos = GameManager.Instance.gridManager.GetCellPosAtPosition(mousePos);
             if (clickedCellPos.HasValue)
             {
-                if (GameManager.Instance.gridManager.IsInNeighbourCell(transform.position, clickedCellPos.Value))
+                if (GameManager.Instance.gridManager.IsInRange(transform.position, clickedCellPos.Value, 1))
                 {
                     return MoveTo(clickedCellPos.Value);
 

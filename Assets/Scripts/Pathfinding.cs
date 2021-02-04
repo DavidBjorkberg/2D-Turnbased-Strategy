@@ -36,7 +36,7 @@ public class Pathfinding : MonoBehaviour
     void UpdatePath()
     {
         getPathTimer -= Time.deltaTime;
-        if (GameManager.Instance.gridManager.IsInNeighbourCell(transform.position, playerTransform.position))
+        if (GameManager.Instance.gridManager.IsInRange(transform.position, playerTransform.position, 1))
         {
             path.Clear();
             path.Add(playerTransform.position);

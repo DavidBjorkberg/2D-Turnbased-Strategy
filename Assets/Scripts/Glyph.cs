@@ -6,4 +6,18 @@ using UnityEngine;
 public class Glyph : ScriptableObject
 {
     public Sprite sprite; 
+
+
+    public void Process()
+    {
+
+    }
+    void CheckCondition()
+    {
+
+    }
+    void Trigger()
+    {
+
+    }
 }

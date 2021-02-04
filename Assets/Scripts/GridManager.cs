@@ -50,7 +50,7 @@ public class GridManager : MonoBehaviour
                 {
                     aStarPositions[i, j] = new Vector3(x + 0.5f, y + 0.5f, 0);
                     cells[cells.Count - 1].Add(Instantiate(cellPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity, walkGrid.transform));
-                    if(topLeftCell == null)
+                    if (topLeftCell == null)
                     {
                         topLeftCell = cells[cells.Count - 1][cells[cells.Count - 1].Count - 1];
                     }
@@ -144,12 +144,23 @@ public class GridManager : MonoBehaviour
     {
         return aStar.CreatePath(aStarPositions, pos1, pos2, 1000).Count - 1;
     }
-    public bool IsInNeighbourCell(Vector3 pos1, Vector3 pos2)
+    public bool IsInRange(Vector3 pos1, Vector3 pos2, int rangeInCells)
     {
-        float distance = Vector2.Distance(pos1, pos2);
-        float pow = Mathf.Pow(grid.cellSize.x, 2) + Mathf.Pow(grid.cellSize.x, 2);
-        float diagonalDistance = Mathf.Sqrt(pow);
-        return distance <= diagonalDistance;
+        Vector2Int? pos1Index = GetCellAtPosition(pos1);
+        Vector2Int? pos2Index = GetCellAtPosition(pos2);
+
+        if (pos1Index.HasValue && pos2Index.HasValue)
+        {
+            bool isXInRange = Mathf.Abs(pos1Index.Value.x - pos2Index.Value.x) <= rangeInCells;
+            bool isYInRange = Mathf.Abs(pos1Index.Value.y - pos2Index.Value.y) <= rangeInCells;
+
+            return isXInRange && isYInRange;
+        }
+        else
+        {
+            print("Tried to get cell outside of grid");
+            return false;
+        }
     }
     public GameObject GetCell(Vector2Int index)
     {
