@@ -28,6 +28,7 @@ public class AttackGrid : MonoBehaviour
                     if (rotationGrid[x][y])
                     {
                         cellsToRender.Add(new Vector4(x, y, 0, 0));
+                        visualGrid[x][y].GetComponent<SpriteRenderer>().sprite = rotationGrid[x][y].sprite;
                     }
                     visualGrid[x][y].SetActive(true);
                 }

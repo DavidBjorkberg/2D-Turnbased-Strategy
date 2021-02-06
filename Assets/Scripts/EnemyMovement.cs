@@ -51,6 +51,7 @@ public class EnemyMovement : MonoBehaviour
             transform.position = Vector3.Lerp(startPos,endPos,lerpValue);
             yield return new WaitForEndOfFrame();
         }
+        print("Removed path");
         path.RemoveAt(path.Count - 1);
     }
     protected void DrawPath()

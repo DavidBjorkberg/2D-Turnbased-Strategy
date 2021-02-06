@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    internal EnemyHealth enemyHealth;
+    internal EnemyAttack enemyAttack;
+    internal EnemyMovement enemyMovement;
+    internal EnemyActionPicker enemyActionPicker;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        enemyHealth = GetComponent<EnemyHealth>();
+        enemyAttack = GetComponent<EnemyAttack>();
+        enemyMovement = GetComponent<EnemyMovement>();
+        enemyActionPicker = GetComponent<EnemyActionPicker>();
+    }
+    public Vector2Int GetCurrentCellIndex()
+    {
+        return GameManager.Instance.gridManager.GetCellAtPosition(transform.position).Value;
     }
 }

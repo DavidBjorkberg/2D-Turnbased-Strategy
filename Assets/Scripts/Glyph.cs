@@ -6,23 +6,31 @@ using UnityEngine;
 public class Glyph : ScriptableObject
 {
     public Sprite sprite;
-    public Vector2Int cellIndex;
-
+    public GameObject explosion;
+    internal Vector2Int cellIndex;
     public void Process()
     {
         CheckCondition();
     }
     void CheckCondition()
     {
+        List<Enemy> allEnemies = GameManager.Instance.enemyManager.GetAllEnemies();
 
-        if (GameManager.Instance.gridManager.IsInRange(cellIndex, GameManager.Instance.roundManager.enemyTest.transform.position, 0))
+        for (int i = 0; i < allEnemies.Count; i++)
         {
-            Trigger();
+            if (GameManager.Instance.gridManager.IsInRange(cellIndex, allEnemies[i].transform.position, 0))
+            {
+                Trigger(allEnemies[i]);
+            }
         }
     }
-    void Trigger()
+    void Trigger(Enemy enemy)
     {
-        Debug.Log("TRIGGERED");
+        enemy.enemyHealth.TakeDamage(3);
+
+        Vector3 cellPos = GameManager.Instance.gridManager.GetCellPos(cellIndex);
+        GameObject instantiatedExplosion = Instantiate(explosion, cellPos, Quaternion.identity);
+        Destroy(instantiatedExplosion, 1);
         GameManager.Instance.glyphManager.RemoveGlyph(cellIndex);
     }
 }

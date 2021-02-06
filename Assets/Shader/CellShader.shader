@@ -213,8 +213,6 @@ Shader "CellShader"
 														}
 													}
 
-
-													//-5 -5
 													int xIndex = (centerOfQuad.x - topLeftCellPos.x) / cellSize;
 													int yIndex = (topLeftCellPos.y - centerOfQuad.y) / cellSize;
 													for (int i = 0; i < 3; i++)
@@ -242,14 +240,26 @@ Shader "CellShader"
 															hasTexture = true;
 														}
 													}
-
-													if (uv.x > 1 - _LineSize || uv.x < _LineSize || uv.y > 1 - _LineSize || uv.y < _LineSize)
-													{
-														color = _LineColor;
-													}
-													else if (hasTexture)
+													if (hasTexture)
 													{
 														color = tex2D(_MainTex, uv);
+													}
+
+													float size = _LineSize;
+													if (IN.isWalkable)
+													{
+														size = size *2;
+													}
+													if (uv.x > 1 - size || uv.x < size || uv.y > 1 - size || uv.y < size)
+													{
+														if (IN.isWalkable)
+														{
+															color = _WalkAbleColor;
+														}
+														else
+														{
+															color = _LineColor;
+														}
 													}
 													else if (IN.isWalkable)
 													{
@@ -259,7 +269,8 @@ Shader "CellShader"
 														}
 														else
 														{
-															color = _WalkAbleColor;
+															color *= (_WalkAbleColor);
+															color.w = 1; 
 														}
 													}
 

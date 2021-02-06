@@ -16,20 +16,15 @@ public class EnemyActionPicker : MonoBehaviour
     public IEnumerator RequestAction()
     {
         IEnumerator action = null;
-        while (action == null)
+        action = attack.RequestAction();
+        if (action == null)
         {
-            action = attack.RequestAction();
-            if (action == null)
-            {
-                action = movement.RequestAction();
-            }
-            yield return new WaitForEndOfFrame();
+            action = movement.RequestAction();
         }
 
         yield return StartCoroutine(GameManager.Instance.roundManager.BeforeEnemyActionEvent());
         yield return StartCoroutine(action);
 
-        GameManager.Instance.roundManager.EndEnemyTurn();
         yield return null;
     }
 

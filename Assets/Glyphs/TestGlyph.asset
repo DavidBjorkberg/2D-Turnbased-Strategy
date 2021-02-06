@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2535f69723c314c48a2d162fa9d512e8, type: 3}
   m_Name: TestGlyph
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 644b91d579c619b4bb6f5f442d36b55d, type: 3}
+  sprite: {fileID: 21300000, guid: 60fce8e0cfac6204bb46d1ab9bc67fe1, type: 3}
+  explosion: {fileID: 6111310397123765872, guid: d0287559ed3135e42934f9ea6ac7f600, type: 3}

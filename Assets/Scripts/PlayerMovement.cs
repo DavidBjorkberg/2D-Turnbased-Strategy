@@ -5,42 +5,30 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float movementSpeed;
-    public enum FacingDir { Right, Left };
-    public FacingDir facingDir;
-    public SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    private PlayerAttack playerAttack;
+    private Vector2Int currentCellIndex;
 
+    private void Awake()
+    {
+        playerAttack = GetComponent<PlayerAttack>();
+    }
     private void Start()
     {
-        facingDir = FacingDir.Left;
+        Vector2Int? cellIndexNullable = GameManager.Instance.gridManager.GetCellAtPosition(transform.position);
+        currentCellIndex = cellIndexNullable.Value;
+        if(!cellIndexNullable.HasValue)
+        {
+            Debug.LogError("Player must start inside grid");
+        }
     }
     void Update()
     {
         Shader.SetGlobalVector("playerPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 1));
-        Shader.SetGlobalVector("mousePos", new Vector4(GameManager.Instance.GetMousePosInWorld().x, GameManager.Instance.GetMousePosInWorld().y, 0, 1));
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
-        Vector3 dir = new Vector3(horizontalInput, verticalInput);
-        dir.Normalize();
-
-        if (horizontalInput > 0 && facingDir != FacingDir.Right)
-        {
-            spriteRenderer.flipX = false;
-            facingDir = FacingDir.Right;
-        }
-        else if (horizontalInput < 0 && facingDir != FacingDir.Left)
-        {
-            spriteRenderer.flipX = true;
-            facingDir = FacingDir.Left;
-        }
-
-        if (!WallCheck(dir))
-        {
-            transform.position += dir * movementSpeed * Time.deltaTime;
-        }
     }
     public IEnumerator RequestAction()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !playerAttack.attackGrid.IsGridActive())
         {
             Vector2 mousePos = GameManager.Instance.GetMousePosInWorld();
             Vector2? clickedCellPos = GameManager.Instance.gridManager.GetCellPosAtPosition(mousePos);
@@ -56,6 +44,10 @@ public class PlayerMovement : MonoBehaviour
         }
         return null;
     }
+    public Vector2Int GetCurrentCellIndex()
+    {
+        return currentCellIndex;
+    }
     IEnumerator MoveTo(Vector3 pos)
     {
         Vector3 startPos = transform.position;
@@ -68,10 +60,7 @@ public class PlayerMovement : MonoBehaviour
             transform.position = Vector3.Lerp(startPos, endPos, lerpValue);
             yield return new WaitForEndOfFrame();
         }
+        Vector2Int? cellIndexNullable = GameManager.Instance.gridManager.GetCellAtPosition(transform.position);
+        currentCellIndex = cellIndexNullable.Value;
     }
-    bool WallCheck(Vector2 direction)
-    {
-        return Physics2D.Raycast(transform.position, direction, 1, 1 << 6);
-    }
-
 }

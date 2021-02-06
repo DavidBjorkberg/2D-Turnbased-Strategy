@@ -6,14 +6,17 @@ public class GridManager : MonoBehaviour
 {
     public Tilemap walkable;
     public Tilemap collidable;
+    public Tilemap spawnPoints;
     public GameObject cellPrefab;
     public Grid grid;
     public Vector3[,] aStarPositions;
     public AStar aStar;
+    internal List<Vector2Int> spawnPointCellIndices = new List<Vector2Int>();
     [SerializeField] private GameObject walkGrid;
     private List<List<GameObject>> cells = new List<List<GameObject>>();
     private GameObject topLeftCell;
-    BoundsInt bounds;
+    private BoundsInt bounds;
+
 
     void Awake()
     {
@@ -39,6 +42,10 @@ public class GridManager : MonoBehaviour
             cells.Add(new List<GameObject>());
             for (int y = bounds.yMax - 1, j = 0; j < (bounds.size.y); y--, j++)
             {
+                if(spawnPoints.HasTile(new Vector3Int(x,y,0)))
+                {
+                    spawnPointCellIndices.Add(new Vector2Int(i, j));
+                }
                 if (collidable.HasTile(new Vector3Int(x, y, 0)))
                 {
                     aStarPositions[i, j] = new Vector3(x + 0.5f, y + 0.5f, 1);
@@ -79,6 +86,10 @@ public class GridManager : MonoBehaviour
             }
         }
         return null;
+    }
+    public Vector3 GetCellPos(Vector2Int cellIndex)
+    {
+        return cells[cellIndex.x][cellIndex.y].transform.position;
     }
     private bool IsInsideCell(Vector3 pos, Vector2 cell)
     {
@@ -178,6 +189,26 @@ public class GridManager : MonoBehaviour
             print("Tried to get cell outside of grid");
             return false;
         }
+    }
+    public Vector2 GetRandomWalkableCellPos()
+    {
+        int randomX = Random.Range(0, bounds.size.x);
+        int randomY = Random.Range(0, bounds.size.y);
+        while (aStarPositions[randomX,randomY].z == 1)
+        {
+            randomX = Random.Range(0, bounds.size.x);
+            randomY = Random.Range(0, bounds.size.y);
+        }
+
+        return new Vector2(aStarPositions[randomX, randomY].x, aStarPositions[randomX, randomY].y);
+    }
+    public Vector2Int GetGridSize()
+    {
+        return new Vector2Int(bounds.size.x, bounds.size.y);
+    }
+    public bool IsCellFree(Vector2Int index)
+    {
+        return aStarPositions[index.x,index.y].z == 0;
     }
     public GameObject GetCell(Vector2Int index)
     {

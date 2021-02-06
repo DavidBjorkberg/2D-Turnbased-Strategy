@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    public EnemyActionPicker enemyTest;
     private void Start()
     {
         StartPlayerTurn();
@@ -25,7 +24,7 @@ public class RoundManager : MonoBehaviour
     }
     public void StartEnemyTurn()
     {
-        StartCoroutine(enemyTest.RequestAction());
+        StartCoroutine(GameManager.Instance.enemyManager.ProcessEnemies());
     }
     public void PerformPlayerTurn()
     {
