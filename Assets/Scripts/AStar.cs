@@ -6,16 +6,12 @@ using UnityEngine;
 
 public class AStar : MonoBehaviour
 {
-    public Spot[,] Spots;
+    private Spot[,] Spots;
     private Vector3 cellSize;
-    private int columns;
-    private int rows;
     public void Init(int columns, int rows, Vector3 cellSize)
     {
         Spots = new Spot[columns, rows];
         this.cellSize = cellSize;
-        this.columns = columns;
-        this.rows = rows;
     }
     private bool IsValidPath(Vector3[,] grid, Spot start, Spot end)
     {
@@ -42,7 +38,7 @@ public class AStar : MonoBehaviour
         {
             for (int j = 0; j < rows; j++)
             {
-                Spots[i, j] = new Spot(grid[i, j].x, grid[i, j].y, grid[i, j].z, columns, rows);
+                Spots[i, j] = new Spot(grid[i, j].x, grid[i, j].y, grid[i, j].z, new Vector2Int(i, j), columns, rows);
             }
         }
 
@@ -112,11 +108,11 @@ public class AStar : MonoBehaviour
 
 
             //Finds the next closest step on the grid
-            var neighboors = current.neighbours;
-            for (int i = 0; i < neighboors.Count; i++)//look threw our current spots neighboors (current spot is the shortest F distance in openSet
+            var neighbours = current.neighbours;
+            for (int i = 0; i < neighbours.Count; i++)//look threw our current spots neighboors (current spot is the shortest F distance in openSet
             {
-                var n = neighboors[i];
-                if (!ClosedSet.Contains(n) && n.height < 1)//Checks to make sure the neighboor of our current tile is not within closed set, and has a height of less than 1
+                var n = neighbours[i];
+                if (!ClosedSet.Contains(n) && n.height < 1 && GameManager.Instance.enemyManager.IsCellFreeFromEnemies(n.cellIndex))//Checks to make sure the neighboor of our current tile is not within closed set, and has a height of less than 1
                 {
                     var tempG = current.G + 1;//gets a temp comparison integer for seeing if a route is shorter than our current path
 

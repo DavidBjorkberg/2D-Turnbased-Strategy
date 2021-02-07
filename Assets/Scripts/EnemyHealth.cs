@@ -17,12 +17,16 @@ public class EnemyHealth : MonoBehaviour
         curHealth -= amount;
         if (curHealth <= 0)
         {
-            Destroy(gameObject);
+            transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
         }
         else
         {
             damageFlash.Flash();
         }
 
+    }
+    public bool IsAlive()
+    {
+        return curHealth > 0;
     }
 }

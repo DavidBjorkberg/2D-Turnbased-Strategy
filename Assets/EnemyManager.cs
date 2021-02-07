@@ -10,20 +10,29 @@ public class EnemyManager : MonoBehaviour
     void Start()
     {
         spawnPointCellIndices = GameManager.Instance.gridManager.spawnPointCellIndices;
-        for (int i = 0; i < spawnPointCellIndices.Count; i++)
+        for (int i = 0; i < 2; i++)
         {
             Vector3 spawnPos = GameManager.Instance.gridManager.GetCellPos(spawnPointCellIndices[i]);
-            enemies.Add(Instantiate(enemyPrefab, spawnPos, Quaternion.identity));
+            Enemy instantiatedEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            instantiatedEnemy.SetCurrentCellIndex(spawnPointCellIndices[i]);
+            instantiatedEnemy.SetClaimedCellIndex(spawnPointCellIndices[i]);
+            enemies.Add(instantiatedEnemy);
         }
-
     }
 
     public IEnumerator ProcessEnemies()
     {
         List<Coroutine> coroutines = new List<Coroutine>();
-        for (int i = 0; i < enemies.Count; i++)
+        for (int i = enemies.Count - 1; i >= 0; i--)
         {
-            coroutines.Add(StartCoroutine(enemies[i].GetComponent<EnemyActionPicker>().RequestAction()));
+            if (enemies[i].enemyHealth.IsAlive())
+            {
+                coroutines.Add(StartCoroutine(enemies[i].GetComponent<EnemyActionPicker>().RequestAction()));
+            }
+            else
+            {
+                enemies.RemoveAt(i);
+            }
         }
         for (int i = 0; i < coroutines.Count; i++)
         {
@@ -36,7 +45,7 @@ public class EnemyManager : MonoBehaviour
     {
         for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemies[i].GetCurrentCellIndex() == cellIndex)
+            if (enemies[i].GetCurrentCellIndex() == cellIndex || enemies[i].GetClaimedCellIndex() == cellIndex)
             {
                 return false;
             }

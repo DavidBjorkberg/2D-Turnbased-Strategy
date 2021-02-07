@@ -8,7 +8,9 @@ public class Enemy : MonoBehaviour
     internal EnemyAttack enemyAttack;
     internal EnemyMovement enemyMovement;
     internal EnemyActionPicker enemyActionPicker;
-
+    private Vector2Int curCellIndex;
+    private Vector2Int claimedCellIndex;
+    
     private void Awake()
     {
         enemyHealth = GetComponent<EnemyHealth>();
@@ -18,6 +20,18 @@ public class Enemy : MonoBehaviour
     }
     public Vector2Int GetCurrentCellIndex()
     {
-        return GameManager.Instance.gridManager.GetCellAtPosition(transform.position).Value;
+        return curCellIndex;
+    }
+    public void SetCurrentCellIndex(Vector2Int cellIndex)
+    {
+        curCellIndex = cellIndex;
+    }
+    public Vector2Int GetClaimedCellIndex()
+    {
+        return claimedCellIndex;
+    }
+    public void SetClaimedCellIndex(Vector2Int cellIndex)
+    {
+        claimedCellIndex = cellIndex;
     }
 }

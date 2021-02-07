@@ -7,7 +7,7 @@ public class EnemyRangedAttack : EnemyAttack
     public Fireball fireball;
     public override IEnumerator RequestAction()
     {
-        if (IsInAttackRange())
+        if (IsInAttackRange() && IsAttackPathClear())
         {
             return Attack();
         }

@@ -34,9 +34,11 @@ public class EnemyMovement : MonoBehaviour
     protected void GetNewPath()
     {
         path = gridManager.GetPath(transform.position, GameManager.Instance.player.transform.position);
+
         if (path.Count > 0)
         {
             path.RemoveAt(path.Count - 1);
+            GetComponent<Enemy>().SetClaimedCellIndex(GameManager.Instance.gridManager.GetCellAtPosition(path[path.Count - 1]).Value);
         }
     }
     protected IEnumerator MoveToNext()
@@ -48,10 +50,11 @@ public class EnemyMovement : MonoBehaviour
         while (lerpValue < 1)
         {
             lerpValue += Time.deltaTime * movementSpeed;
-            transform.position = Vector3.Lerp(startPos,endPos,lerpValue);
+            transform.position = Vector3.Lerp(startPos, endPos, lerpValue);
             yield return new WaitForEndOfFrame();
         }
-        print("Removed path");
+            print(name + ": current cell");
+        GetComponent<Enemy>().SetCurrentCellIndex(GameManager.Instance.gridManager.GetCellAtPosition(endPos).Value);
         path.RemoveAt(path.Count - 1);
     }
     protected void DrawPath()

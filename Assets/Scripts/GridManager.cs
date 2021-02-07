@@ -151,9 +151,61 @@ public class GridManager : MonoBehaviour
         }
         return null;
     }
-    public int GetNrOfCellsBetweenPositions(Vector3 pos1, Vector3 pos2)
+    public int GetNrOfCellsBetweenCells(Vector2Int startCellIndex, Vector2Int endCellIndex)
     {
-        return aStar.CreatePath(aStarPositions, pos1, pos2, 1000).Count - 1;
+        Vector2Int curCellIndex = startCellIndex;
+        int nrOfCells = 0;
+        while(curCellIndex != endCellIndex )
+        {
+            if(curCellIndex.x - endCellIndex.x < 0)
+            {
+                curCellIndex.x++;
+            }
+            else if(curCellIndex.x - endCellIndex.x > 0)
+            {
+                curCellIndex.x--;
+            }
+            if (curCellIndex.y - endCellIndex.y < 0)
+            {
+                curCellIndex.y++;
+            }
+            else if (curCellIndex.y - endCellIndex.y > 0)
+            {
+                curCellIndex.y--;
+            }
+            nrOfCells++;
+        }
+        return nrOfCells;
+    }
+    public bool IsPathClearBetweenCells(Vector2Int startCellIndex, Vector2Int endCellIndex)
+    {
+        Vector2Int curCellIndex = startCellIndex;
+        bool isPathClear = true;
+        while (curCellIndex != endCellIndex && isPathClear)
+        {
+            if (curCellIndex.x - endCellIndex.x < 0)
+            {
+                curCellIndex.x++;
+            }
+            else if (curCellIndex.x - endCellIndex.x > 0)
+            {
+                curCellIndex.x--;
+            }
+            if (curCellIndex.y - endCellIndex.y < 0)
+            {
+                curCellIndex.y++;
+            }
+            else if (curCellIndex.y - endCellIndex.y > 0)
+            {
+                curCellIndex.y--;
+            }
+
+            if (!IsCellFree(curCellIndex))
+            {
+                isPathClear = false;
+            }
+        }
+        return isPathClear;
     }
     public bool IsInRange(Vector3 pos1, Vector3 pos2, int rangeInCells)
     {
@@ -189,18 +241,6 @@ public class GridManager : MonoBehaviour
             print("Tried to get cell outside of grid");
             return false;
         }
-    }
-    public Vector2 GetRandomWalkableCellPos()
-    {
-        int randomX = Random.Range(0, bounds.size.x);
-        int randomY = Random.Range(0, bounds.size.y);
-        while (aStarPositions[randomX,randomY].z == 1)
-        {
-            randomX = Random.Range(0, bounds.size.x);
-            randomY = Random.Range(0, bounds.size.y);
-        }
-
-        return new Vector2(aStarPositions[randomX, randomY].x, aStarPositions[randomX, randomY].y);
     }
     public Vector2Int GetGridSize()
     {

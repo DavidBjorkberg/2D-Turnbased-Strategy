@@ -6,6 +6,7 @@ public class Spot
 {
     public float x;
     public float y;
+    public Vector2Int cellIndex;
     public float F;
     public float G;
     public float H;
@@ -14,10 +15,11 @@ public class Spot
     public Spot previous = null;
     private int gridColumns;
     private int gridRows;
-    public Spot(float x, float y, float height, int gridColumns, int gridRows)
+    public Spot(float x, float y, float height, Vector2Int cellIndex, int gridColumns, int gridRows)
     {
         this.x = x;
         this.y = y;
+        this.cellIndex = cellIndex;
         this.gridColumns = gridColumns;
         this.gridRows = gridRows;
         F = 0;

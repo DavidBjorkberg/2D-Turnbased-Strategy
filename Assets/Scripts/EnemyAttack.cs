@@ -16,7 +16,16 @@ public abstract class EnemyAttack : MonoBehaviour
     {
         GridManager gridManager = GameManager.Instance.gridManager;
         Vector3 playerPos = GameManager.Instance.player.transform.position;
-        int distanceInCells = gridManager.GetNrOfCellsBetweenPositions(transform.position, playerPos);
-        return distanceInCells <= rangeInCells;
+
+        return gridManager.IsInRange(playerPos, transform.position, rangeInCells);
+    }
+    protected virtual bool IsAttackPathClear()
+    {
+        GridManager gridManager = GameManager.Instance.gridManager;
+        Vector2Int playerCellIndex = GameManager.Instance.player.playerMovement.GetCurrentCellIndex();
+        Vector2Int curCellIndex = GetComponent<Enemy>().GetCurrentCellIndex();
+        bool isPathClearToPlayer = gridManager.IsPathClearBetweenCells(curCellIndex, playerCellIndex);
+
+        return isPathClearToPlayer;
     }
 }
