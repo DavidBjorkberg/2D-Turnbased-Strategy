@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float movementSpeed;
+    [SerializeField] private float movementSpeed;
     [SerializeField] private SpriteRenderer spriteRenderer;
     private PlayerAttack playerAttack;
     private Vector2Int currentCellIndex;

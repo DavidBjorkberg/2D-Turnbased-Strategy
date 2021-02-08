@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class RangedEnemyCombat : MonoBehaviour
 {
-    public Fireball fireball;
-    public float range;
-    public float attackCooldown;
+    [SerializeField] private Fireball fireball;
+    [SerializeField] private float range;
+    [SerializeField] private float attackCooldown;
     private float attackTimer;
     private Transform playerTransform;
 

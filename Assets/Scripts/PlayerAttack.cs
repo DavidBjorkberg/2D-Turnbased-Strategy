@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public KeyCode attackButton;
     public AttackGrid attackGrid;
-    public Sprite attackSprite;
+    [SerializeField] private KeyCode attackButton;
+    [SerializeField] private Sprite attackSprite;
     private PlayerMovement movement;
     private PlayerAbility ability;
     private void Awake()

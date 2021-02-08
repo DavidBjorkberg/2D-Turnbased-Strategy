@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Fireball : MonoBehaviour
 {
-    public int damage;
+    [SerializeField] private int damage;
     public float speed;
     private Vector3 direction;
     private bool isInitialized;

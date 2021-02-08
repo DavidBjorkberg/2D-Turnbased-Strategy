@@ -4,19 +4,18 @@ using UnityEngine.Tilemaps;
 
 public class GridManager : MonoBehaviour
 {
-    public Tilemap walkable;
-    public Tilemap collidable;
-    public Tilemap spawnPoints;
-    public GameObject cellPrefab;
-    public Grid grid;
-    public Vector3[,] aStarPositions;
-    public AStar aStar;
     internal List<Vector2Int> spawnPointCellIndices = new List<Vector2Int>();
+    [SerializeField] private Tilemap walkable;
+    [SerializeField] private Tilemap collidable;
+    [SerializeField] private Tilemap spawnPoints;
+    [SerializeField] private GameObject cellPrefab;
+    [SerializeField] private AStar aStar;
     [SerializeField] private GameObject walkGrid;
+    private Grid grid;
+    private Vector3[,] aStarPositions;
     private List<List<GameObject>> cells = new List<List<GameObject>>();
     private GameObject topLeftCell;
     private BoundsInt bounds;
-
 
     void Awake()
     {
@@ -42,7 +41,7 @@ public class GridManager : MonoBehaviour
             cells.Add(new List<GameObject>());
             for (int y = bounds.yMax - 1, j = 0; j < (bounds.size.y); y--, j++)
             {
-                if(spawnPoints.HasTile(new Vector3Int(x,y,0)))
+                if (spawnPoints.HasTile(new Vector3Int(x, y, 0)))
                 {
                     spawnPointCellIndices.Add(new Vector2Int(i, j));
                 }
@@ -155,13 +154,13 @@ public class GridManager : MonoBehaviour
     {
         Vector2Int curCellIndex = startCellIndex;
         int nrOfCells = 0;
-        while(curCellIndex != endCellIndex )
+        while (curCellIndex != endCellIndex)
         {
-            if(curCellIndex.x - endCellIndex.x < 0)
+            if (curCellIndex.x - endCellIndex.x < 0)
             {
                 curCellIndex.x++;
             }
-            else if(curCellIndex.x - endCellIndex.x > 0)
+            else if (curCellIndex.x - endCellIndex.x > 0)
             {
                 curCellIndex.x--;
             }
@@ -248,7 +247,7 @@ public class GridManager : MonoBehaviour
     }
     public bool IsCellFree(Vector2Int index)
     {
-        return aStarPositions[index.x,index.y].z == 0;
+        return aStarPositions[index.x, index.y].z == 0;
     }
     public GameObject GetCell(Vector2Int index)
     {

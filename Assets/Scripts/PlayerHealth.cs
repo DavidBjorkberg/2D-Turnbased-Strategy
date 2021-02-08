@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHealth;
+    [SerializeField] private int maxHealth;
     private int curHealth;
     private Player player;
     private TakeDamageFlash damageFlash;

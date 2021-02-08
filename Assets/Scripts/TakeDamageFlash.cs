@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TakeDamageFlash : MonoBehaviour
 {
-    public float flashSpeed;
-    public SpriteRenderer spriteRenderer;
+    [SerializeField] private float flashSpeed;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     private Coroutine damageFlashCoroutine;
     private Color baseColor;
     private void Awake()

@@ -10,7 +10,7 @@ public class EnemyManager : MonoBehaviour
     void Start()
     {
         spawnPointCellIndices = GameManager.Instance.gridManager.spawnPointCellIndices;
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < spawnPointCellIndices.Count; i++)
         {
             Vector3 spawnPos = GameManager.Instance.gridManager.GetCellPos(spawnPointCellIndices[i]);
             Enemy instantiatedEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);

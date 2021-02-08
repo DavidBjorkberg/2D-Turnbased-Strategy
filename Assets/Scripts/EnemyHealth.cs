@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int maxHealth;
+    [SerializeField] private int maxHealth;
     private int curHealth;
     private TakeDamageFlash damageFlash;
     private void Awake()

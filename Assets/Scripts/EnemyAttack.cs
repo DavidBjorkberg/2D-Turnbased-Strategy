@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class EnemyAttack : MonoBehaviour
 {
-    public int damage;
-    public int rangeInCells;
+    [SerializeField] protected int damage;
+    [SerializeField] private int rangeInCells;
     protected Transform playerTransform;
     private void Start()
     {

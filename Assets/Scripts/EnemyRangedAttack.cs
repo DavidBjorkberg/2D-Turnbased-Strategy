@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyRangedAttack : EnemyAttack
 {
-    public Fireball fireball;
+    [SerializeField] private Fireball fireball;
     public override IEnumerator RequestAction()
     {
         if (IsInAttackRange() && IsAttackPathClear())

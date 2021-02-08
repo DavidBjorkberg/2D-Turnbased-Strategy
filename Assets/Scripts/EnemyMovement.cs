@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    public float movementSpeed;
-    public bool drawPath;
+   [SerializeField] private float movementSpeed;
+   [SerializeField] private bool drawPath;
 
     protected GridManager gridManager;
     protected Transform playerTransform;
@@ -53,7 +53,6 @@ public class EnemyMovement : MonoBehaviour
             transform.position = Vector3.Lerp(startPos, endPos, lerpValue);
             yield return new WaitForEndOfFrame();
         }
-            print(name + ": current cell");
         GetComponent<Enemy>().SetCurrentCellIndex(GameManager.Instance.gridManager.GetCellAtPosition(endPos).Value);
         path.RemoveAt(path.Count - 1);
     }
