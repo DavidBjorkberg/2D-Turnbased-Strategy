@@ -8,7 +8,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private KeyCode attackButton;
     [SerializeField] private Sprite attackSprite;
     private PlayerMovement movement;
-    private PlayerAbility ability;
+    internal PlayerAbility ability;
     private void Awake()
     {
 

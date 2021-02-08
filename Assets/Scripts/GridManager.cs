@@ -11,7 +11,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private AStar aStar;
     [SerializeField] private GameObject walkGrid;
-    private Grid grid;
+    [SerializeField] private Grid grid;
     private Vector3[,] aStarPositions;
     private List<List<GameObject>> cells = new List<List<GameObject>>();
     private GameObject topLeftCell;

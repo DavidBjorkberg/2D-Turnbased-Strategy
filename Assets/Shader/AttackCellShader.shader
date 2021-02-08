@@ -50,7 +50,7 @@ Shader "AttackCellShader"
 				uniform float4 mousePos;
 				uniform float playerTakingWalkInput;
 				uniform float cellSize;
-				uniform float4 cellsToRender[7];
+				uniform float4 cellsToRender[49];
 				v2g vert(appdata_base v)
 				{
 					v2g o;
@@ -214,7 +214,7 @@ Shader "AttackCellShader"
 
 					bool shouldRender = false;
 
-					for (int i = 0; i < 5; i++)
+					for (int i = 0; i < 7 * 7; i++)
 					{
 						if (IN.index.x == cellsToRender[i].x && IN.index.y == cellsToRender[i].y)
 						{

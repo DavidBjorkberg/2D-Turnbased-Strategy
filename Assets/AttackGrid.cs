@@ -10,6 +10,16 @@ public class AttackGrid : MonoBehaviour
     [SerializeField] private GameObject cellPrefab;
     private bool isActive;
     private List<List<Glyph>> curAbilityGrid;
+    private void Awake()
+    {
+        List<Vector4> cellsToRender = new List<Vector4>();
+        for (int i = 0; i < 7 * 7; i++)
+        {
+            cellsToRender.Add(-Vector4.one);
+        }
+        Shader.SetGlobalVectorArray("cellsToRender", cellsToRender);
+
+    }
     void Start()
     {
         Spawn();
