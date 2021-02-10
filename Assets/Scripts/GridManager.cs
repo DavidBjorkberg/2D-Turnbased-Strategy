@@ -4,47 +4,41 @@ using UnityEngine.Tilemaps;
 
 public class GridManager : MonoBehaviour
 {
-    internal List<Vector2Int> spawnPointCellIndices = new List<Vector2Int>();
-    [SerializeField] private Tilemap walkable;
-    [SerializeField] private Tilemap collidable;
-    [SerializeField] private Tilemap spawnPoints;
+    internal List<Vector2Int> enemySpawnpointCellIndices = new List<Vector2Int>();
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private AStar aStar;
     [SerializeField] private GameObject walkGrid;
-    [SerializeField] private Grid grid;
     private Vector3[,] aStarPositions;
     private List<List<GameObject>> cells = new List<List<GameObject>>();
     private GameObject topLeftCell;
-    private BoundsInt bounds;
+    internal BoundsInt gridBounds;
 
     void Awake()
     {
+        Shader.SetGlobalFloat("cellSize", 1);
+    }
+    public void SwitchRoom(Tilemap walkable, Tilemap collidable, Tilemap bounds)
+    {
+        bounds.CompressBounds();
         walkable.CompressBounds();
         collidable.CompressBounds();
-        if (walkable.cellBounds != collidable.cellBounds)
-        {
-            Debug.LogError("Walkable cellbounds are not identical to collidable cellbounds");
-        }
-        Shader.SetGlobalFloat("cellSize", grid.cellSize.x);
-        bounds = walkable.cellBounds;
-        CreateGridAndCells();
+        gridBounds = bounds.cellBounds;
+        CreateGridAndCells(walkable, collidable);
+        aStar.Init(gridBounds.size.x, gridBounds.size.y, Vector3.one);
         Shader.SetGlobalVector("topLeftCellPos", cells[0][0].transform.position);
         Shader.SetGlobalFloat("nrOfCellsWithGlyph", 0);
-        aStar.Init(bounds.size.x, bounds.size.y, grid.cellSize);
     }
-    public void CreateGridAndCells()
+    public void CreateGridAndCells(Tilemap walkable, Tilemap collidable)
     {
-        aStarPositions = new Vector3[bounds.size.x, bounds.size.y];
+        aStarPositions = new Vector3[gridBounds.size.x, gridBounds.size.y];
+        DestroyAllCells();
         //TODO: Why is -1 needed on yMax?
-        for (int x = bounds.xMin, i = 0; i < (bounds.size.x); x++, i++)
+        for (int x = gridBounds.xMin, i = 0; i < (gridBounds.size.x); x++, i++)
         {
             cells.Add(new List<GameObject>());
-            for (int y = bounds.yMax - 1, j = 0; j < (bounds.size.y); y--, j++)
+            for (int y = gridBounds.yMax - 1, j = 0; j < (gridBounds.size.y); y--, j++)
             {
-                if (spawnPoints.HasTile(new Vector3Int(x, y, 0)))
-                {
-                    spawnPointCellIndices.Add(new Vector2Int(i, j));
-                }
+
                 if (collidable.HasTile(new Vector3Int(x, y, 0)))
                 {
                     aStarPositions[i, j] = new Vector3(x + 0.5f, y + 0.5f, 1);
@@ -64,12 +58,24 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+    void DestroyAllCells()
+    {
+        for (int i = 0; i < cells.Count; i++)
+        {
+            for (int j = 0; j < cells[i].Count; j++)
+            {
+                Destroy(cells[i][j]);
+            }
+        }
+        cells.Clear();
+
+    }
 
     public Vector2? GetCellPosAtPosition(Vector2 pos)
     {
-        for (int i = 0; i < bounds.size.x; i++)
+        for (int i = 0; i < gridBounds.size.x; i++)
         {
-            for (int j = 0; j < bounds.size.y; j++)
+            for (int j = 0; j < gridBounds.size.y; j++)
             {
                 if (IsInsideCell(pos, cells[i][j].transform.position))
                 {
@@ -92,10 +98,10 @@ public class GridManager : MonoBehaviour
     }
     private bool IsInsideCell(Vector3 pos, Vector2 cell)
     {
-        float cellMinX = cell.x - grid.cellSize.x / 2;
-        float cellMaxX = cell.x + grid.cellSize.x / 2;
-        float cellMinY = cell.y - grid.cellSize.y / 2;
-        float cellMaxY = cell.y + grid.cellSize.y / 2;
+        float cellMinX = cell.x - 0.5f;
+        float cellMaxX = cell.x + 0.5f;
+        float cellMinY = cell.y - 0.5f;
+        float cellMaxY = cell.y + 0.5f;
 
         return pos.x >= cellMinX &&
             pos.x <= cellMaxX &&
@@ -131,9 +137,9 @@ public class GridManager : MonoBehaviour
     }
     public Vector2Int? GetCellAtPosition(Vector3 pos)
     {
-        for (int i = 0; i < bounds.size.x; i++)
+        for (int i = 0; i < gridBounds.size.x; i++)
         {
-            for (int j = 0; j < bounds.size.y; j++)
+            for (int j = 0; j < gridBounds.size.y; j++)
             {
                 if (IsInsideCell(pos, cells[i][j].transform.position))
                 {
@@ -243,7 +249,7 @@ public class GridManager : MonoBehaviour
     }
     public Vector2Int GetGridSize()
     {
-        return new Vector2Int(bounds.size.x, bounds.size.y);
+        return new Vector2Int(gridBounds.size.x, gridBounds.size.y);
     }
     public bool IsCellFree(Vector2Int index)
     {

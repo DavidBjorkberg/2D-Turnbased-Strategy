@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
 
     public static GameManager Instance { get { return _instance; } }
-    public Player player;
+    internal Player player;
     public GridManager gridManager;
     public RoundManager roundManager;
     public GlyphManager glyphManager;
     public EnemyManager enemyManager;
+    public RoomManager roomManager;
     public Glyph testGlyph;
+    [SerializeField] private Player playerPrefab;
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -22,6 +25,27 @@ public class GameManager : MonoBehaviour
         else
         {
             _instance = this;
+        }
+    }
+    public void SpawnPlayer(Tilemap playerSpawnpoint)
+    {
+        if(player != null)
+        {
+            Destroy(player.gameObject);
+        }
+        BoundsInt bounds = gridManager.gridBounds;
+        for (int x = bounds.xMin, i = 0; i < (bounds.size.x); x++, i++)
+        {
+            for (int y = bounds.yMax - 1, j = 0; j < (bounds.size.y); y--, j++)
+            {
+                if (playerSpawnpoint.HasTile(new Vector3Int(x, y, 0)))
+                {
+                    Vector2Int spawnPointIndex = new Vector2Int(i, j);
+                    Vector3 spawnPos = gridManager.GetCellPos(spawnPointIndex);
+                    player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+                    break;
+                }
+            }
         }
     }
     private void Update()

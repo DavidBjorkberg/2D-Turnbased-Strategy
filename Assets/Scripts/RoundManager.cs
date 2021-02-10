@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    private void Start()
-    {
-        StartPlayerTurn();
-    }
     public void StartPlayerTurn()
     {
         Shader.SetGlobalFloat("playerTakingWalkInput", 1);
@@ -25,14 +21,6 @@ public class RoundManager : MonoBehaviour
     public void StartEnemyTurn()
     {
         StartCoroutine(GameManager.Instance.enemyManager.ProcessEnemies());
-    }
-    public void PerformPlayerTurn()
-    {
-
-    }
-    public void PerformEnemyTurn()
-    {
-
     }
     public void EndPlayerTurn()
     {

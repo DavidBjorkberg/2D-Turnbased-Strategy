@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 public class AddGlyphUI : MonoBehaviour
 {
-    public Sprite defaultCellSprite;
-    public GameObject newGlyphSlot;
-    public GameObject newGlyphCell;
+    [SerializeField] private Sprite defaultCellSprite;
+    [SerializeField] private GameObject newGlyphSlot;
+    [SerializeField] private GameObject newGlyphCell;
     private List<List<GameObject>> abilityGrid = new List<List<GameObject>>();
     private PlayerAbility curAbility;
     private Glyph glyphToAdd;
+    private Vector2Int placedGlyphIndex;
     private void Awake()
     {
         GameObject abilityGridParent = transform.Find("AbilityGrid").gameObject;
@@ -17,7 +18,7 @@ public class AddGlyphUI : MonoBehaviour
         {
             abilityGrid.Add(new List<GameObject>());
         }
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 7; j++)
             {
@@ -52,6 +53,7 @@ public class AddGlyphUI : MonoBehaviour
     }
     public void Hide()
     {
+        curAbility.grid[placedGlyphIndex.x][placedGlyphIndex.y] = Instantiate(glyphToAdd);
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(false); 
@@ -62,6 +64,6 @@ public class AddGlyphUI : MonoBehaviour
     {
         int xIndex = abilityGridIndex % 7;
         int yIndex = Mathf.FloorToInt(abilityGridIndex / 7.0f);
-        curAbility.grid[xIndex][yIndex] = Instantiate(glyphToAdd);
+        placedGlyphIndex = new Vector2Int(xIndex, yIndex);
     }
 }

@@ -6,14 +6,7 @@ public class PlayerAttack : MonoBehaviour
 {
     public AttackGrid attackGrid;
     [SerializeField] private KeyCode attackButton;
-    [SerializeField] private Sprite attackSprite;
-    private PlayerMovement movement;
     internal PlayerAbility ability;
-    private void Awake()
-    {
-
-        movement = GetComponent<PlayerMovement>();
-    }
     private void Start()
     {
         ability = ScriptableObject.CreateInstance("PlayerAbility") as PlayerAbility;

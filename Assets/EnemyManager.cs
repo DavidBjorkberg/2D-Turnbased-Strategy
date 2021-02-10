@@ -1,28 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private Enemy enemyPrefab;
+    private Tilemap enemySpawnpoints;
+    private List<Vector2Int> spawnpointCellIndices = new List<Vector2Int>();
     private List<Enemy> enemies = new List<Enemy>();
-    private List<Vector2Int> spawnPointCellIndices = new List<Vector2Int>();
-    void Start()
+
+    public void SwitchRoom(Tilemap enemySpawnpoints)
     {
-        spawnPointCellIndices = GameManager.Instance.gridManager.spawnPointCellIndices;
-        for (int i = 0; i < spawnPointCellIndices.Count; i++)
-        {
-            Vector3 spawnPos = GameManager.Instance.gridManager.GetCellPos(spawnPointCellIndices[i]);
-            Enemy instantiatedEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-            instantiatedEnemy.SetCurrentCellIndex(spawnPointCellIndices[i]);
-            instantiatedEnemy.SetClaimedCellIndex(spawnPointCellIndices[i]);
-            enemies.Add(instantiatedEnemy);
-        }
+        DestroyAllEnemies();
+        this.enemySpawnpoints = enemySpawnpoints;
+        ReadInSpawnpoints();
+        SpawnEnemies();
     }
 
     public IEnumerator ProcessEnemies()
     {
         List<Coroutine> coroutines = new List<Coroutine>();
+        print(enemies.Count);
         for (int i = enemies.Count - 1; i >= 0; i--)
         {
             if (enemies[i].enemyHealth.IsAlive())
@@ -31,7 +30,7 @@ public class EnemyManager : MonoBehaviour
             }
             else
             {
-                enemies.RemoveAt(i);
+                EnemyDied(i);
             }
         }
         for (int i = 0; i < coroutines.Count; i++)
@@ -40,6 +39,23 @@ public class EnemyManager : MonoBehaviour
         }
         GameManager.Instance.roundManager.EndEnemyTurn();
 
+    }
+    void EnemyDied(int index)
+    {
+        Destroy(enemies[index]);
+        enemies.RemoveAt(index);
+        if(enemies.Count <= 0)
+        {
+            GameManager.Instance.roomManager.LoadNextRoom();
+        }
+    }
+    void DestroyAllEnemies()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            Destroy(enemies[i].gameObject);
+        }
+        enemies.Clear();
     }
     public bool IsCellFreeFromEnemies(Vector2Int cellIndex)
     {
@@ -55,5 +71,30 @@ public class EnemyManager : MonoBehaviour
     public List<Enemy> GetAllEnemies()
     {
         return enemies;
+    }
+    void ReadInSpawnpoints()
+    {
+        BoundsInt bounds = GameManager.Instance.gridManager.gridBounds;
+        for (int x = bounds.xMin, i = 0; i < (bounds.size.x); x++, i++)
+        {
+            for (int y = bounds.yMax - 1, j = 0; j < (bounds.size.y); y--, j++)
+            {
+                if (enemySpawnpoints.HasTile(new Vector3Int(x, y, 0)))
+                {
+                    spawnpointCellIndices.Add(new Vector2Int(i, j));
+                }
+            }
+        }
+    }
+    void SpawnEnemies()
+    {
+        for (int i = 0; i < spawnpointCellIndices.Count; i++)
+        {
+            Vector3 spawnPos = GameManager.Instance.gridManager.GetCellPos(spawnpointCellIndices[i]);
+            Enemy instantiatedEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            instantiatedEnemy.SetCurrentCellIndex(spawnpointCellIndices[i]);
+            instantiatedEnemy.SetClaimedCellIndex(spawnpointCellIndices[i]);
+            enemies.Add(instantiatedEnemy);
+        }
     }
 }
