@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[CreateAssetMenu(menuName = "Abilities/Ability")]
 public class PlayerAbility : ScriptableObject
 {
     internal List<List<Glyph>> grid = new List<List<Glyph>>();
-    private void Awake()
+    [SerializeField] private List<Vector2Int> glyphIndices = new List<Vector2Int>();
+    [SerializeField] private List<Glyph> glyphs = new List<Glyph>();
+    public void Init()
     {
         for (int x = 0; x < 7; x++)
         {
@@ -13,12 +15,19 @@ public class PlayerAbility : ScriptableObject
             for (int y = 0; y < 7; y++)
             {
                 Glyph glyph = null;
-                if (x == 3 && y == 0 || x == 3 && y == 1 || x == 3 && y == 2 || x == 4 && y == 0 || x == 5 && y == 0)
+                for (int i = 0; i < glyphIndices.Count; i++)
                 {
-                    //glyph = ScriptableObject.CreateInstance("Glyph") as Glyph;
-                    glyph = Instantiate(GameManager.Instance.testGlyph);
+                    if (glyphIndices[i].x == x && glyphIndices[i].y == y)
+                    {
+                        glyph = Instantiate(glyphs[i]);
+                    }
                 }
                 grid[x].Add(glyph);
+
+                //if (x == 3 && y == 0 || x == 3 && y == 1 || x == 3 && y == 2 || x == 4 && y == 0 || x == 5 && y == 0)
+                //{
+                //    glyph = Instantiate(GameManager.Instance.testGlyph);
+                //}
             }
         }
     }

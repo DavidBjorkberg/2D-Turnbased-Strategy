@@ -7,7 +7,7 @@ public class RoundManager : MonoBehaviour
     public void StartPlayerTurn()
     {
         Shader.SetGlobalFloat("playerTakingWalkInput", 1);
-         StartCoroutine(GameManager.Instance.player.GetComponent<PlayerActionPicker>().RequestAction());
+        StartCoroutine(GameManager.Instance.player.GetComponent<PlayerActionPicker>().RequestAction());
     }
     public IEnumerator BeforePlayerActionEvent()
     {
@@ -20,6 +20,8 @@ public class RoundManager : MonoBehaviour
     }
     public void StartEnemyTurn()
     {
+        GameManager.Instance.glyphManager.ProcessGlyphs(false);
+        GameManager.Instance.enemyManager.ProcessDeadEnemies();
         StartCoroutine(GameManager.Instance.enemyManager.ProcessEnemies());
     }
     public void EndPlayerTurn()
@@ -28,7 +30,8 @@ public class RoundManager : MonoBehaviour
     }
     public void EndEnemyTurn()
     {
-        GameManager.Instance.glyphManager.ProcessGlyphs();
+        GameManager.Instance.glyphManager.ProcessGlyphs(true);
+        GameManager.Instance.enemyManager.ProcessDeadEnemies();
         StartPlayerTurn();
     }
 }

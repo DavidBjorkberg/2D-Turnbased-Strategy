@@ -8,7 +8,7 @@ public class Glyph : ScriptableObject
     public Sprite sprite;
     [SerializeField] private GameObject explosion;
     internal Vector2Int cellIndex;
-    public void Process()
+    public void Process(bool endOfTurn)
     {
         CheckCondition();
     }

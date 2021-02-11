@@ -5,11 +5,12 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public AttackGrid attackGrid;
+    public PlayerAbility ability;
     [SerializeField] private KeyCode attackButton;
-    internal PlayerAbility ability;
-    private void Start()
+
+    private void Awake()
     {
-        ability = ScriptableObject.CreateInstance("PlayerAbility") as PlayerAbility;
+        ability.Init();
     }
     public void PerformNonTurnEndingAction()
     {

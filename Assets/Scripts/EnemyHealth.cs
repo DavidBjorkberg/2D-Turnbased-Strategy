@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private int maxHealth;
+    [SerializeField] EnemyHealthBar healthBar;
     private int curHealth;
     private TakeDamageFlash damageFlash;
     private void Awake()
@@ -22,6 +23,7 @@ public class EnemyHealth : MonoBehaviour
         else
         {
             damageFlash.Flash();
+            healthBar.UpdateHealthBar(curHealth, maxHealth);
         }
 
     }

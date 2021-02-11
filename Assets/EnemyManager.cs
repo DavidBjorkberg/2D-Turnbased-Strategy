@@ -21,17 +21,9 @@ public class EnemyManager : MonoBehaviour
     public IEnumerator ProcessEnemies()
     {
         List<Coroutine> coroutines = new List<Coroutine>();
-        print(enemies.Count);
-        for (int i = enemies.Count - 1; i >= 0; i--)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemies[i].enemyHealth.IsAlive())
-            {
-                coroutines.Add(StartCoroutine(enemies[i].GetComponent<EnemyActionPicker>().RequestAction()));
-            }
-            else
-            {
-                EnemyDied(i);
-            }
+            coroutines.Add(StartCoroutine(enemies[i].GetComponent<EnemyActionPicker>().RequestAction()));
         }
         for (int i = 0; i < coroutines.Count; i++)
         {
@@ -42,11 +34,21 @@ public class EnemyManager : MonoBehaviour
     }
     void EnemyDied(int index)
     {
-        Destroy(enemies[index]);
+        Destroy(enemies[index].gameObject);
         enemies.RemoveAt(index);
-        if(enemies.Count <= 0)
+        if (enemies.Count <= 0)
         {
             GameManager.Instance.roomManager.LoadNextRoom();
+        }
+    }
+    public void ProcessDeadEnemies()
+    {
+        for (int i = enemies.Count - 1; i >= 0; i--)
+        {
+            if (!enemies[i].enemyHealth.IsAlive())
+            {
+                EnemyDied(i);
+            }
         }
     }
     void DestroyAllEnemies()

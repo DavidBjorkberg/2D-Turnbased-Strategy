@@ -29,11 +29,11 @@ public class GlyphManager : MonoBehaviour
         Shader.SetGlobalVectorArray("cellsWithGlyph", cellsWithGlyph);
         Shader.SetGlobalFloat("nrOfCellsWithGlyph", nrOfCellsWithGlyph);
     }
-    public void ProcessGlyphs()
+    public void ProcessGlyphs(bool endOfTurn)
     {
         for (int i = 0; i < placedGlyphs.Count; i++)
         {
-            placedGlyphs[i].Process();
+            placedGlyphs[i].Process(endOfTurn);
         }
     }
     public void RemoveGlyph(Vector2Int cellIndexOfGlyph)
