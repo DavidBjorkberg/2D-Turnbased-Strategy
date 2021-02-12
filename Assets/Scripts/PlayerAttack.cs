@@ -5,12 +5,13 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public AttackGrid attackGrid;
-    public PlayerAbility ability;
+    internal PlayerAbility ability;
+    [SerializeField] private PlayerAbility startAbility;
     [SerializeField] private KeyCode attackButton;
 
     private void Awake()
     {
-        ability.Init();
+        ability = Instantiate(startAbility);
     }
     public void PerformNonTurnEndingAction()
     {
@@ -22,7 +23,7 @@ public class PlayerAttack : MonoBehaviour
             }
             else
             {
-                attackGrid.ActivateGrid(GameManager.Instance.DeepCopyGrid(ability.grid));
+                attackGrid.ActivateGrid(ability);
             }
         }
     }
@@ -39,7 +40,7 @@ public class PlayerAttack : MonoBehaviour
         List<List<Glyph>> rotatedAbilityGrid = new List<List<Glyph>>();
         List<List<Vector2Int>> nearbyIndices = new List<List<Vector2Int>>();
 
-        rotatedAbilityGrid = attackGrid.GetRotatedGrid();
+        rotatedAbilityGrid = ability.GetRotatedGrid();
         nearbyIndices = GameManager.Instance.gridManager.GetNearbyCellIndicesAsGrid(transform.position, 3);
 
         for (int i = 0; i < rotatedAbilityGrid.Count; i++)

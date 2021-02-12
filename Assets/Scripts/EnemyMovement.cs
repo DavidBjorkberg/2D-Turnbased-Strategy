@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-   [SerializeField] private float movementSpeed;
-   [SerializeField] private bool drawPath;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private int movementDistanceInCells;
+    [SerializeField] private bool drawPath;
 
     protected GridManager gridManager;
     protected Transform playerTransform;
@@ -15,7 +16,6 @@ public class EnemyMovement : MonoBehaviour
     {
         gridManager = GameManager.Instance.gridManager;
         playerTransform = GameManager.Instance.player.transform;
-        GetNewPath();
     }
     void Update()
     {
@@ -33,18 +33,17 @@ public class EnemyMovement : MonoBehaviour
 
     protected void GetNewPath()
     {
-        path = gridManager.GetPath(transform.position, GameManager.Instance.player.transform.position);
+        path = gridManager.GetPath(transform.position, GameManager.Instance.player.transform.position, movementDistanceInCells);
 
         if (path.Count > 0)
         {
-            path.RemoveAt(path.Count - 1);
-            GetComponent<Enemy>().SetClaimedCellIndex(GameManager.Instance.gridManager.GetCellAtPosition(path[path.Count - 1]).Value);
+            GetComponent<Enemy>().SetClaimedCellIndex(GameManager.Instance.gridManager.GetCellAtPosition(path[path.Count - 2]).Value);
         }
     }
     protected IEnumerator MoveToNext()
     {
         Vector3 startPos = transform.position;
-        Vector3 endPos = path[path.Count - 1];
+        Vector3 endPos = path[path.Count - 2];
         float lerpValue = 0;
 
         while (lerpValue < 1)

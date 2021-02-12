@@ -9,7 +9,7 @@ public class AttackGrid : MonoBehaviour
     [SerializeField] private int gridHeight;
     [SerializeField] private GameObject cellPrefab;
     private bool isActive;
-    private List<List<Glyph>> curAbilityGrid;
+    private PlayerAbility curAbility;
     private void Awake()
     {
         List<Vector4> cellsToRender = new List<Vector4>();
@@ -28,8 +28,7 @@ public class AttackGrid : MonoBehaviour
     {
         if (isActive)
         {
-            List<List<Glyph>> rotationGrid = GameManager.Instance.DeepCopyGrid(curAbilityGrid);
-            RotateGrid90Degrees(ref rotationGrid, GetNrOfRotations());
+            List<List<Glyph>> rotationGrid = curAbility.GetRotatedGrid();
             List<Vector4> cellsToRender = new List<Vector4>();
             for (int y = 0; y < rotationGrid.Count; y++)
             {
@@ -61,10 +60,10 @@ public class AttackGrid : MonoBehaviour
         }
         DeactivateGrid();
     }
-    public void ActivateGrid(List<List<Glyph>> abilityGrid)
+    public void ActivateGrid(PlayerAbility ability)
     {
         isActive = true;
-        curAbilityGrid = abilityGrid;
+        curAbility = ability;
         Shader.SetGlobalFloat("playerTakingWalkInput", 0);
 
     }
@@ -85,101 +84,4 @@ public class AttackGrid : MonoBehaviour
     {
         return isActive;
     }
-    int GetNrOfRotations()
-    {
-        Vector2 mousePos = GameManager.Instance.GetMousePosInWorld();
-        Vector2 playerPos = GameManager.Instance.player.transform.position;
-
-        Vector2 playerToMouseDir = (mousePos - playerPos).normalized;
-
-        if (playerToMouseDir.x > 0)
-        {
-            if (playerToMouseDir.y > 0)
-            {
-                if (playerToMouseDir.x > playerToMouseDir.y)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            else
-            {
-                if (playerToMouseDir.x > Mathf.Abs(playerToMouseDir.y))
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 2;
-                }
-            }
-        }
-        else
-        {
-            if (playerToMouseDir.y > 0)
-            {
-                if (Mathf.Abs(playerToMouseDir.x) > playerToMouseDir.y)
-                {
-                    return 3;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            else
-            {
-                if (Mathf.Abs(playerToMouseDir.x) > Mathf.Abs(playerToMouseDir.y))
-                {
-                    return 3;
-                }
-                else
-                {
-                    return 2;
-                }
-            }
-        }
-    }
-    void RotateGrid90Degrees(ref List<List<Glyph>> grid, int nrOfRotations)
-    {
-        for (int i = 0; i < nrOfRotations; i++)
-        {
-            grid = TransposeGrid(grid);
-            for (int y = 0; y < grid.Count; y++)
-            {
-                for (int x = 0; x < Mathf.FloorToInt(grid[y].Count / 2); x++)
-                {
-                    Glyph temp = grid[x][y];
-                    int rightSideSwitchIndex = grid[y].Count - x - 1;
-
-                    grid[x][y] = grid[rightSideSwitchIndex][y];
-                    grid[rightSideSwitchIndex][y] = temp;
-                }
-            }
-        }
-    }
-    List<List<Glyph>> TransposeGrid(List<List<Glyph>> grid)
-    {
-        for (int i = 0; i < grid.Count; i++)
-        {
-            for (int j = i; j < grid[i].Count; j++)
-            {
-                Glyph temp = grid[i][j];
-
-                grid[i][j] = grid[j][i];
-                grid[j][i] = temp;
-            }
-        }
-        return grid;
-    }
-    public List<List<Glyph>> GetRotatedGrid()
-    {
-        List<List<Glyph>> rotationGrid = GameManager.Instance.DeepCopyGrid(curAbilityGrid);
-        RotateGrid90Degrees(ref rotationGrid, GetNrOfRotations());
-        return rotationGrid;
-    }
-
 }

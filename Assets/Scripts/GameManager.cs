@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public GlyphManager glyphManager;
     public EnemyManager enemyManager;
     public RoomManager roomManager;
-    public Glyph testGlyph;
+    [SerializeField] private AddGlyphUI AddGlyphUI;
     [SerializeField] private Player playerPrefab;
     private void Awake()
     {
@@ -59,44 +59,14 @@ public class GameManager : MonoBehaviour
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
         return worldPos;
     }
-    public Vector2Int? GetFreeCell()
+    public void ShowAddGlyphUI(PlayerAbility ability, Glyph glyphToAdd)
     {
-        Vector2Int gridSize = gridManager.GetGridSize();
-        Vector2Int curCellIndex;
-        for (int i = 0; i < gridSize.x; i++)
-        {
-            for (int j = 0; j < gridSize.y; j++)
-            {
-                curCellIndex = new Vector2Int(i, j);
-                if (gridManager.IsCellFree(curCellIndex)
-                    && player.playerMovement.GetCurrentCellIndex() != curCellIndex
-                    && enemyManager.IsCellFreeFromEnemies(curCellIndex))
-                {
-                    return curCellIndex;
-                }
-            }
-        }
-        return null;
+        AddGlyphUI.Show(ability, glyphToAdd);
     }
-    public List<List<Glyph>> DeepCopyGrid(List<List<Glyph>> grid)
+    public bool IsCellFree(Vector2Int cellIndex)
     {
-        List<List<Glyph>> newGrid = new List<List<Glyph>>();
-        for (int i = 0; i < grid.Count; i++)
-        {
-            newGrid.Add(new List<Glyph>());
-            for (int j = 0; j < grid[i].Count; j++)
-            {
-                if (grid[i][j] != null)
-                {
-                    newGrid[i].Add(Instantiate(grid[i][j]));
-                }
-                else
-                {
-                    newGrid[i].Add(null);
-                }
-            }
-        }
-        return newGrid;
+        return gridManager.IsCellFree(cellIndex) && enemyManager.IsCellFreeFromEnemies(cellIndex);
     }
+
 
 }

@@ -259,8 +259,8 @@ public class GridManager : MonoBehaviour
     {
         return cells[index.x][index.y];
     }
-    public List<Vector3> GetPath(Vector3 start, Vector3 end)
+    public List<Vector3> GetPath(Vector3 start, Vector3 end, int length)
     {
-        return aStar.CreatePath(aStarPositions, start, end, 1000);
+        return aStar.CreatePath(aStarPositions, start, end, length);
     }
 }

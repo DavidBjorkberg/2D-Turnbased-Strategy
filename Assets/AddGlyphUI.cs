@@ -10,7 +10,7 @@ public class AddGlyphUI : MonoBehaviour
     private List<List<GameObject>> abilityGrid = new List<List<GameObject>>();
     private PlayerAbility curAbility;
     private Glyph glyphToAdd;
-    private Vector2Int placedGlyphIndex;
+    private Vector2Int? placedGlyphIndex;
     private void Awake()
     {
         GameObject abilityGridParent = transform.Find("AbilityGrid").gameObject;
@@ -38,7 +38,7 @@ public class AddGlyphUI : MonoBehaviour
         {
             for (int j = 0; j < abilityGrid[i].Count; j++)
             {
-                if(ability.grid[i][j] != null)
+                if (ability.grid[i][j] != null)
                 {
                     abilityGrid[i][j].transform.GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 1); // sets alpha to 1
                     abilityGrid[i][j].transform.GetChild(0).GetComponent<Image>().sprite = ability.grid[i][j].sprite;
@@ -53,10 +53,13 @@ public class AddGlyphUI : MonoBehaviour
     }
     public void Hide()
     {
-        curAbility.grid[placedGlyphIndex.x][placedGlyphIndex.y] = Instantiate(glyphToAdd);
+        if (placedGlyphIndex.HasValue)
+        {
+            curAbility.grid[placedGlyphIndex.Value.x][placedGlyphIndex.Value.y] = Instantiate(glyphToAdd);
+        }
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(false); 
+            transform.GetChild(i).gameObject.SetActive(false);
         }
         newGlyphSlot.GetComponent<RectTransform>().anchoredPosition = newGlyphCell.GetComponent<RectTransform>().anchoredPosition;
     }

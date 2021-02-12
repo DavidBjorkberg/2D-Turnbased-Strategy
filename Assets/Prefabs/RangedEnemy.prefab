@@ -632,6 +632,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 2
+  movementDistanceInCells: 1
   drawPath: 0
 --- !u!114 &646737882
 MonoBehaviour:

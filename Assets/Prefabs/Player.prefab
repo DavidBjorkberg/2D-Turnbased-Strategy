@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackGrid: {fileID: 1685577051}
-  ability: {fileID: 11400000, guid: c494fafc113c82447b2fa4d13d4b3a88, type: 2}
+  startAbility: {fileID: 11400000, guid: c494fafc113c82447b2fa4d13d4b3a88, type: 2}
   attackButton: 101
 --- !u!50 &262303494
 Rigidbody2D:

@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(menuName = "Glyph/Glyph")]
 
-public class Glyph : ScriptableObject
+public abstract class Glyph : MonoBehaviour
 {
     public Sprite sprite;
-    [SerializeField] private GameObject explosion;
     internal Vector2Int cellIndex;
-    public void Process(bool endOfTurn)
+    public virtual void Process(bool endOfTurn)
     {
         CheckCondition();
     }
-    void CheckCondition()
+    protected virtual void CheckCondition()
     {
         List<Enemy> allEnemies = GameManager.Instance.enemyManager.GetAllEnemies();
 
@@ -24,13 +22,5 @@ public class Glyph : ScriptableObject
             }
         }
     }
-    void Trigger(Enemy enemy)
-    {
-        enemy.enemyHealth.TakeDamage(3);
-
-        Vector3 cellPos = GameManager.Instance.gridManager.GetCellPos(cellIndex);
-        GameObject instantiatedExplosion = Instantiate(explosion, cellPos, Quaternion.identity);
-        Destroy(instantiatedExplosion, 1);
-        GameManager.Instance.glyphManager.RemoveGlyph(cellIndex);
-    }
+    protected abstract void Trigger(Enemy enemy);
 }

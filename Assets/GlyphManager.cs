@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GlyphManager : MonoBehaviour
 {
+    [SerializeField] private Transform placedGlyphsParent;
     List<Vector4> cellsWithGlyph = new List<Vector4>();
     List<Glyph> placedGlyphs = new List<Glyph>();
     int nrOfCellsWithGlyph = 0;
@@ -19,7 +20,7 @@ public class GlyphManager : MonoBehaviour
         GameObject cell = GameManager.Instance.gridManager.GetCell(cellIndex);
         cell.GetComponent<SpriteRenderer>().sprite = glyph.sprite;
 
-        Glyph glyphCopy = Instantiate(glyph);
+        Glyph glyphCopy = Instantiate(glyph, placedGlyphsParent);
         glyphCopy.cellIndex = cellIndex;
         placedGlyphs.Add(glyphCopy);
 
@@ -50,8 +51,9 @@ public class GlyphManager : MonoBehaviour
 
         for (int i = 0; i < placedGlyphs.Count; i++)
         {
-            if(placedGlyphs[i].cellIndex == cellIndexOfGlyph)
+            if (placedGlyphs[i].cellIndex == cellIndexOfGlyph)
             {
+                Destroy(placedGlyphs[i].gameObject);
                 placedGlyphs.RemoveAt(i);
             }
         }
