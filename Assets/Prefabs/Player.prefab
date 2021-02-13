@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackGrid: {fileID: 1685577051}
-  startAbility: {fileID: 11400000, guid: c494fafc113c82447b2fa4d13d4b3a88, type: 2}
+  startAbility: {fileID: 11400000, guid: ed61ab4c1a5519649aade80133c6d01b, type: 2}
   attackButton: 101
 --- !u!50 &262303494
 Rigidbody2D:
@@ -270,7 +270,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 8343909402574284264}
-  AddGlyphUI: {fileID: 0}
 --- !u!114 &262303500
 MonoBehaviour:
   m_ObjectHideFlags: 0

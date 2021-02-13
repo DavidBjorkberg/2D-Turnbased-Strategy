@@ -55,7 +55,7 @@ Shader "CellShader"
 												uniform float4 playerPosition;
 												uniform float4 mousePos;
 												uniform float4 topLeftCellPos;
-												uniform float4 cellsWithGlyph[1000];
+												uniform float4 cellsWithGlyph[10];
 												uniform float nrOfCellsWithGlyph;
 												uniform float playerTakingWalkInput;
 												uniform float cellSize;
@@ -65,7 +65,7 @@ Shader "CellShader"
 													v2g o;
 													o.pos = UnityObjectToClipPos(v.vertex);
 													o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTex);
-													o.worldPos = v.vertex;
+													o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 													return o;
 												}
 

@@ -230,22 +230,13 @@ public class GridManager : MonoBehaviour
             return false;
         }
     }
-    public bool IsInRange(Vector2 pos1Index, Vector3 pos2, int rangeInCells)
+    public bool IsInRange(Vector2Int pos1Index, Vector2Int pos2Index, int rangeInCells)
     {
-        Vector2Int? pos2Index = GetCellAtPosition(pos2);
 
-        if (pos2Index.HasValue)
-        {
-            bool isXInRange = Mathf.Abs(pos1Index.x - pos2Index.Value.x) <= rangeInCells;
-            bool isYInRange = Mathf.Abs(pos1Index.y - pos2Index.Value.y) <= rangeInCells;
+        bool isXInRange = Mathf.Abs(pos1Index.x - pos2Index.x) <= rangeInCells;
+        bool isYInRange = Mathf.Abs(pos1Index.y - pos2Index.y) <= rangeInCells;
 
-            return isXInRange && isYInRange;
-        }
-        else
-        {
-            print("Tried to get cell outside of grid");
-            return false;
-        }
+        return isXInRange && isYInRange;
     }
     public Vector2Int GetGridSize()
     {

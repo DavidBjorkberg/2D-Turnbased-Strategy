@@ -8,6 +8,13 @@ public class GlyphManager : MonoBehaviour
     List<Vector4> cellsWithGlyph = new List<Vector4>();
     List<Glyph> placedGlyphs = new List<Glyph>();
     int nrOfCellsWithGlyph = 0;
+    internal struct ProcessGlyphsData
+    {
+        internal bool didGlyphMoveEnemy;
+        internal bool isProcessing;
+        internal bool isEndOfTurn;
+    }
+    internal ProcessGlyphsData processGlyphsData;
     private void Awake()
     {
         for (int i = 0; i < 1000; i++)
@@ -32,9 +39,38 @@ public class GlyphManager : MonoBehaviour
     }
     public void ProcessGlyphs(bool endOfTurn)
     {
-        for (int i = 0; i < placedGlyphs.Count; i++)
+        processGlyphsData.didGlyphMoveEnemy = false;
+        processGlyphsData.isProcessing = true;
+        processGlyphsData.isEndOfTurn = endOfTurn;
+    }
+    private void Update()
+    {
+        if (processGlyphsData.isProcessing)
         {
-            placedGlyphs[i].Process(endOfTurn);
+            for (int i = 0; i < placedGlyphs.Count; i++)
+            {
+                if (!placedGlyphs[i].isProcessing)
+                {
+                    placedGlyphs[i].Process(processGlyphsData.isEndOfTurn);
+                }
+                else
+                {
+                    placedGlyphs[i].UpdateGlyph();
+                }
+            }
+            bool areAllGlyphsProcessed = true;
+            for (int i = 0; i < placedGlyphs.Count; i++)
+            {
+                if (placedGlyphs[i].isProcessing)
+                {
+                    areAllGlyphsProcessed = false;
+                }
+            }
+            if (areAllGlyphsProcessed && !processGlyphsData.didGlyphMoveEnemy)
+            {
+                processGlyphsData.isProcessing = false;
+            }
+
         }
     }
     public void RemoveGlyph(Vector2Int cellIndexOfGlyph)
