@@ -12129,6 +12129,7 @@ MonoBehaviour:
   enemySpawnpoints: {fileID: 8456153782139301959}
   playerSpawnpoint: {fileID: 8456153782225401737}
   bounds: {fileID: 8456153781016321029}
+  reward: {fileID: 5667864316435788353, guid: 6faf887b48aea0b4ea19626f12881e7e, type: 3}
 --- !u!1 &8456153781675626632
 GameObject:
   m_ObjectHideFlags: 0

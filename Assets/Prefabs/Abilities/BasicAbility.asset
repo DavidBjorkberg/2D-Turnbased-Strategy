@@ -19,8 +19,8 @@ MonoBehaviour:
   - {x: 4, y: 0}
   - {x: 5, y: 0}
   glyphs:
-  - {fileID: -5613390746300847304, guid: daaebaa4e3dab474f970ed67c4c7b82a, type: 3}
   - {fileID: 5667864316435788353, guid: 6faf887b48aea0b4ea19626f12881e7e, type: 3}
-  - {fileID: -5613390746300847304, guid: daaebaa4e3dab474f970ed67c4c7b82a, type: 3}
+  - {fileID: 5667864316435788353, guid: 6faf887b48aea0b4ea19626f12881e7e, type: 3}
+  - {fileID: 5667864316435788353, guid: 6faf887b48aea0b4ea19626f12881e7e, type: 3}
   - {fileID: -5613390746300847304, guid: daaebaa4e3dab474f970ed67c4c7b82a, type: 3}
   - {fileID: -5613390746300847304, guid: daaebaa4e3dab474f970ed67c4c7b82a, type: 3}

@@ -29,10 +29,6 @@ public class GameManager : MonoBehaviour
     }
     public void SpawnPlayer(Tilemap playerSpawnpoint)
     {
-        if(player != null)
-        {
-            Destroy(player.gameObject);
-        }
         BoundsInt bounds = gridManager.gridBounds;
         for (int x = bounds.xMin, i = 0; i < (bounds.size.x); x++, i++)
         {
@@ -42,11 +38,19 @@ public class GameManager : MonoBehaviour
                 {
                     Vector2Int spawnPointIndex = new Vector2Int(i, j);
                     Vector3 spawnPos = gridManager.GetCellPos(spawnPointIndex);
-                    player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+                    if (player == null)
+                    {
+                        player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+                    }
+                    else
+                    {
+                        player.transform.position = spawnPos;
+                    }
                     break;
                 }
             }
         }
+
     }
     private void Update()
     {

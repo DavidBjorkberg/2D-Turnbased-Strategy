@@ -157,30 +157,8 @@ Shader "AttackCellShader"
 					}
 					return float2(0, 0);
 				}
-				bool RectangleIntersection(float2 l1, float2 r1, float2 l2, float2 r2)
-				{
-					// If one rectangle is on left side of other 
-					if (l1.x >= r2.x || l2.x >= r1.x)
-						return false;
 
-					// If one rectangle is above other 
-					if (l1.y <= r2.y || l2.y <= r1.y)
-						return false;
 
-					return true;
-				}
-				bool IsPointInsideRectangle(float2 bottomLeft, float2 topRight,float2 pointToCheck)
-				{
-					if (pointToCheck.x > bottomLeft.x
-						&& pointToCheck.x < topRight.x
-						&& pointToCheck.y > bottomLeft.y
-						&& pointToCheck.y < topRight.y)
-					{
-						return true;
-					}
-
-					return false;
-				}
 				[maxvertexcount(3)]
 				void geom(triangle v2g input[3], inout TriangleStream<g2f> tristream)
 				{
@@ -196,7 +174,6 @@ Shader "AttackCellShader"
 					index.x = centerOfQuad.x - playerPosition.x;
 					index.y = playerPosition.y - centerOfQuad.y;
 					index += float2(3, 3);
-					//float index = floor(localPos.x) + (floor(localPos.y) * 7);
 
 					for (int i = 0; i < 3; i++)
 					{

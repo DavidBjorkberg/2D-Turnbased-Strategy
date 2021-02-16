@@ -10,5 +10,6 @@ public class Room : MonoBehaviour
     public Tilemap enemySpawnpoints;
     public Tilemap playerSpawnpoint;
     public Tilemap bounds;
+    public Glyph reward;
 
 }

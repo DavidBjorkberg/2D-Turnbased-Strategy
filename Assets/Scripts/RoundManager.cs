@@ -19,6 +19,7 @@ public class RoundManager : MonoBehaviour
         internal bool startedProcessingGlyphs;
     }
     EndEnemyTurnData endEnemyTurnData;
+    Coroutine playerRequestAction;
     void Update()
     {
         switch (roundState)
@@ -46,7 +47,11 @@ public class RoundManager : MonoBehaviour
         roundState = RoundState.StartPlayerTurn;
 
         Shader.SetGlobalFloat("playerTakingWalkInput", 1);
-        StartCoroutine(GameManager.Instance.player.GetComponent<PlayerActionPicker>().RequestAction());
+        if(playerRequestAction != null)
+        {
+            StopCoroutine(playerRequestAction);
+        }
+        playerRequestAction = StartCoroutine(GameManager.Instance.player.GetComponent<PlayerActionPicker>().RequestAction());
     }
     public IEnumerator BeforePlayerActionEvent()
     {
@@ -62,14 +67,14 @@ public class RoundManager : MonoBehaviour
         roundState = RoundState.StartEnemyTurn;
         if (!startEnemyTurnData.startedProcessingGlyphs)
         {
-            GameManager.Instance.glyphManager.ProcessGlyphs(false);
+            GameManager.Instance.glyphManager.startProcessingGlyphs(false);
             startEnemyTurnData.startedProcessingGlyphs = true;
         }
         else if (!GameManager.Instance.glyphManager.processGlyphsData.isProcessing)
         {
             GameManager.Instance.enemyManager.ProcessDeadEnemies();
             StartCoroutine(GameManager.Instance.enemyManager.ProcessEnemies());
-           roundState = RoundState.None;
+            roundState = RoundState.None;
             startEnemyTurnData.startedProcessingGlyphs = false;
         }
     }
@@ -82,7 +87,7 @@ public class RoundManager : MonoBehaviour
         roundState = RoundState.EndEnemyTurn;
         if (!endEnemyTurnData.startedProcessingGlyphs)
         {
-            GameManager.Instance.glyphManager.ProcessGlyphs(true);
+            GameManager.Instance.glyphManager.startProcessingGlyphs(true);
             endEnemyTurnData.startedProcessingGlyphs = true;
         }
         else if (!GameManager.Instance.glyphManager.processGlyphsData.isProcessing)
@@ -92,5 +97,9 @@ public class RoundManager : MonoBehaviour
 
             endEnemyTurnData.startedProcessingGlyphs = false;
         }
+    }
+    public void SwitchRoom()
+    {
+        StartPlayerTurn();
     }
 }

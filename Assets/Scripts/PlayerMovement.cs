@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed;
+    [SerializeField] private int movementRange;
     [SerializeField] private SpriteRenderer spriteRenderer;
     private PlayerAttack playerAttack;
     private Vector2Int currentCellIndex;
@@ -12,12 +13,16 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         playerAttack = GetComponent<PlayerAttack>();
+        Shader.SetGlobalFloat("playerWalkRange", movementRange);
+
     }
     private void Start()
     {
         Vector2Int? cellIndexNullable = GameManager.Instance.gridManager.GetCellAtPosition(transform.position);
         currentCellIndex = cellIndexNullable.Value;
-        if(!cellIndexNullable.HasValue)
+        Shader.SetGlobalVector("playerCellIndex", new Vector4(currentCellIndex.x, currentCellIndex.y, 0, 0));
+
+        if (!cellIndexNullable.HasValue)
         {
             Debug.LogError("Player must start inside grid");
         }
@@ -34,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
             Vector2? clickedCellPos = GameManager.Instance.gridManager.GetCellPosAtPosition(mousePos);
             if (clickedCellPos.HasValue)
             {
-                if (GameManager.Instance.gridManager.IsInRange(transform.position, clickedCellPos.Value, 1))
+                if (GameManager.Instance.gridManager.IsInRange(transform.position, clickedCellPos.Value, movementRange))
                 {
                     return MoveTo(clickedCellPos.Value);
 
@@ -62,5 +67,7 @@ public class PlayerMovement : MonoBehaviour
         }
         Vector2Int? cellIndexNullable = GameManager.Instance.gridManager.GetCellAtPosition(transform.position);
         currentCellIndex = cellIndexNullable.Value;
+        Shader.SetGlobalVector("playerCellIndex", new Vector4(currentCellIndex.x, currentCellIndex.y, 0, 0));
+
     }
 }

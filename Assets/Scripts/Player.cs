@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
     internal PlayerMovement playerMovement;
     internal PlayerHealth playerHealth;
     internal BoxCollider2D hitbox;
-
     private void Awake()
     {
         playerAttack = GetComponent<PlayerAttack>();

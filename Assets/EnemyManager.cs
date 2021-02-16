@@ -13,8 +13,7 @@ public class EnemyManager : MonoBehaviour
     public void SwitchRoom(Tilemap enemySpawnpoints)
     {
         DestroyAllEnemies();
-        this.enemySpawnpoints = enemySpawnpoints;
-        ReadInSpawnpoints();
+        ReadInSpawnpoints(enemySpawnpoints);
         SpawnEnemies();
     }
 
@@ -74,8 +73,9 @@ public class EnemyManager : MonoBehaviour
     {
         return enemies;
     }
-    void ReadInSpawnpoints()
+    void ReadInSpawnpoints(Tilemap enemySpawnpoints)
     {
+        spawnpointCellIndices.Clear();
         BoundsInt bounds = GameManager.Instance.gridManager.gridBounds;
         for (int x = bounds.xMin, i = 0; i < (bounds.size.x); x++, i++)
         {

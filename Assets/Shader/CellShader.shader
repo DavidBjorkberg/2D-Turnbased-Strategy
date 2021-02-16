@@ -53,12 +53,14 @@ Shader "CellShader"
 												float4 _MainTex_ST;
 
 												uniform float4 playerPosition;
+												uniform float4 playerCellIndex;
 												uniform float4 mousePos;
 												uniform float4 topLeftCellPos;
-												uniform float4 cellsWithGlyph[10];
+												uniform float4 cellsWithGlyph[1000];
 												uniform float nrOfCellsWithGlyph;
 												uniform float playerTakingWalkInput;
 												uniform float cellSize;
+												uniform float playerWalkRange;
 
 												v2g vert(appdata_base v)
 												{
@@ -166,27 +168,24 @@ Shader "CellShader"
 												}
 												bool RectangleIntersection(float2 l1, float2 r1, float2 l2, float2 r2)
 												{
-													// If one rectangle is on left side of other 
-													if (l1.x >= r2.x || l2.x >= r1.x)
-														return false;
+													bool isOneRectangleToTheLeft = (l1.x >= r2.x || l2.x >= r1.x);
+													bool isOneRectangleAbove = (l1.y <= r2.y || l2.y <= r1.y);
 
-													// If one rectangle is above other 
-													if (l1.y <= r2.y || l2.y <= r1.y)
-														return false;
-
-													return true;
+													return !isOneRectangleToTheLeft && !isOneRectangleAbove;
 												}
 												bool IsPointInsideRectangle(float2 bottomLeft, float2 topRight,float2 pointToCheck)
 												{
-													if (pointToCheck.x > bottomLeft.x
+													return pointToCheck.x > bottomLeft.x
 														&& pointToCheck.x < topRight.x
 														&& pointToCheck.y > bottomLeft.y
-														&& pointToCheck.y < topRight.y)
-													{
-														return true;
-													}
+														&& pointToCheck.y < topRight.y;
+												}
+												bool IsInWalkableRange(float2 pos1Index, float2 pos2Index)
+												{
+													bool isXInRange = abs(pos1Index.x - pos2Index.x) <= playerWalkRange;
+													bool isYInRange = abs(pos1Index.y - pos2Index.y) <= playerWalkRange;
 
-													return false;
+													return isXInRange && isYInRange;
 												}
 												[maxvertexcount(3)]
 												void geom(triangle v2g input[3], inout TriangleStream<g2f> tristream)
@@ -200,21 +199,18 @@ Shader "CellShader"
 													float2 bottomRight = GetBottomRightVert(input, fourthPoint);
 													float2 centerOfQuad = (bottomLeft + topLeft + topRight + bottomRight) / 4;
 
+													float2 index;
+													index.x = (centerOfQuad.x - topLeftCellPos.x) / cellSize;
+													index.y = (topLeftCellPos.y - centerOfQuad.y) / cellSize;
+
 													bool isWalkable = false;
 													bool isHovered = false;
 													if (playerTakingWalkInput == 1)
 													{
-														float2 topLeftOfPlayerWalkable = playerPosition.xy + float2(-((cellSize / 2) + cellSize), (cellSize / 2) + cellSize);
-														float2 bottomRightOfPlayerWalkable = playerPosition.xy + float2((cellSize / 2) + cellSize, -((cellSize / 2) + cellSize));
-														isWalkable = RectangleIntersection(topLeftOfPlayerWalkable, bottomRightOfPlayerWalkable, topLeft, bottomRight);
-														if (IsPointInsideRectangle(bottomLeft, topRight, mousePos.xy))
-														{
-															isHovered = true;
-														}
+														isWalkable = IsInWalkableRange(index, playerCellIndex.xy);
+														isHovered = IsPointInsideRectangle(bottomLeft, topRight, mousePos.xy);
 													}
 
-													int xIndex = (centerOfQuad.x - topLeftCellPos.x) / cellSize;
-													int yIndex = (topLeftCellPos.y - centerOfQuad.y) / cellSize;
 													for (int i = 0; i < 3; i++)
 													{
 														o.pos = input[i].pos;
@@ -222,7 +218,7 @@ Shader "CellShader"
 														o.worldPos = input[i].worldPos;
 														o.isWalkable = isWalkable;
 														o.isHovered = isHovered;
-														o.index = float2(xIndex,yIndex);
+														o.index = index;
 														tristream.Append(o);
 													}
 												}

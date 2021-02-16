@@ -22,6 +22,16 @@ public class GlyphManager : MonoBehaviour
             cellsWithGlyph.Add(new Vector4());
         }
     }
+    public void SwitchRoom()
+    {
+        for (int i = placedGlyphs.Count - 1; i >= 0; i--)
+        {
+            Destroy(placedGlyphs[i].gameObject);
+            placedGlyphs.RemoveAt(i);
+        }
+        placedGlyphs.Clear();
+        nrOfCellsWithGlyph = 0;
+    }
     public void PlaceGlyph(Glyph glyph, Vector2Int cellIndex)
     {
         GameObject cell = GameManager.Instance.gridManager.GetCell(cellIndex);
@@ -37,7 +47,7 @@ public class GlyphManager : MonoBehaviour
         Shader.SetGlobalVectorArray("cellsWithGlyph", cellsWithGlyph);
         Shader.SetGlobalFloat("nrOfCellsWithGlyph", nrOfCellsWithGlyph);
     }
-    public void ProcessGlyphs(bool endOfTurn)
+    public void startProcessingGlyphs(bool endOfTurn)
     {
         processGlyphsData.didGlyphMoveEnemy = false;
         processGlyphsData.isProcessing = true;
@@ -47,30 +57,34 @@ public class GlyphManager : MonoBehaviour
     {
         if (processGlyphsData.isProcessing)
         {
-            for (int i = 0; i < placedGlyphs.Count; i++)
+            ProcessGlyphs();
+        }
+    }
+    void ProcessGlyphs()
+    {
+        processGlyphsData.didGlyphMoveEnemy = false;
+        for (int i = 0; i < placedGlyphs.Count; i++)
+        {
+            if (!placedGlyphs[i].isProcessing)
             {
-                if (!placedGlyphs[i].isProcessing)
-                {
-                    placedGlyphs[i].Process(processGlyphsData.isEndOfTurn);
-                }
-                else
-                {
-                    placedGlyphs[i].UpdateGlyph();
-                }
+                placedGlyphs[i].Process(processGlyphsData.isEndOfTurn);
             }
-            bool areAllGlyphsProcessed = true;
-            for (int i = 0; i < placedGlyphs.Count; i++)
+            else
             {
-                if (placedGlyphs[i].isProcessing)
-                {
-                    areAllGlyphsProcessed = false;
-                }
+                placedGlyphs[i].UpdateGlyph();
             }
-            if (areAllGlyphsProcessed && !processGlyphsData.didGlyphMoveEnemy)
+        }
+        bool areAllGlyphsProcessed = true;
+        for (int i = 0; i < placedGlyphs.Count; i++)
+        {
+            if (placedGlyphs[i].isProcessing)
             {
-                processGlyphsData.isProcessing = false;
+                areAllGlyphsProcessed = false;
             }
-
+        }
+        if (areAllGlyphsProcessed && !processGlyphsData.didGlyphMoveEnemy)
+        {
+            processGlyphsData.isProcessing = false;
         }
     }
     public void RemoveGlyph(Vector2Int cellIndexOfGlyph)
